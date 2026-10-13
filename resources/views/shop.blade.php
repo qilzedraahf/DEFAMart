@@ -1,11 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DEFAMart - Belanja Mudah & Cepat</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-50 min-h-screen flex flex-col justify-between">
 
 @if (session('success'))
@@ -156,11 +159,42 @@
                                         </div>
                                         <div>
                                             <h4 class="text-sm font-semibold text-gray-800 line-clamp-1">{{ $item->product->name }}</h4>
-                                            <p class="text-xs text-gray-500">{{ $item->quantity }} x Rp {{ number_format($item->product->price, 0, ',', '.') }}</p>
+                                           
+
+<p class="text-xs text-gray-500 mb-2">
+    Rp {{ number_format($item->product->price, 0, ',', '.') }} / item
+</p>
+
+<div class="flex items-center gap-2">
+    <button type="button"
+        onclick="updateCartQuantity({{ $item->id }}, 'decrease', this)"
+        class="w-8 h-8 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
+        −
+    </button>
+
+    <input type="number"
+        min="1"
+        value="{{ $item->quantity }}"
+        data-cart-item-id="{{ $item->id }}"
+        data-price="{{ $item->product->price }}"
+        onchange="updateCartQuantity({{ $item->id }}, 'set', this)"
+        class="cart-quantity w-14 h-8 text-center text-base font-bold text-gray-800 bg-white border border-gray-300 rounded-lg">
+
+    <button type="button"
+        onclick="updateCartQuantity({{ $item->id }}, 'increase', this)"
+        class="w-8 h-8 rounded-lg bg-[#134e32] text-white hover:bg-[#0f3e28]">
+        +
+    </button>
+</div>
+
+<p class="cart-subtotal text-sm font-bold text-[#134e32] mt-2"
+   data-cart-item-id="{{ $item->id }}">
+    Rp {{ number_format($subtotal, 0, ',', '.') }}
+</p>
+
                                         </div>
                                     </div>
-                                    <!-- Harga dengan Aksen Hijau -->
-                                    <p class="text-sm font-bold text-[#134e32]">Rp {{ number_format($subtotal, 0, ',', '.') }}</p>
+                                  
                                 </div>
                             @endforeach
                         @endif
@@ -171,7 +205,9 @@
                 <div class="p-5 border-t border-gray-200 bg-gray-50">
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-base font-semibold text-gray-700">Total Harga:</span>
-                        <span class="text-xl font-extrabold text-[#134e32]">Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}</span>
+                       
+<span id="cartTotal" class="text-xl font-extrabold text-[#134e32]">Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}</span>
+
                     </div>
                     
                     <form action="{{ route('order.checkout') }}" method="POST">
@@ -714,6 +750,220 @@
             });
         }
     </script>
+
+
+<script>
+let pendingRemoveCartItemId = null;
+
+function showRemoveCartModal(itemId) {
+    pendingRemoveCartItemId = itemId;
+
+    const modal = document.getElementById('removeCartModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeRemoveCartModal() {
+    const modal = document.getElementById('removeCartModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+
+    pendingRemoveCartItemId = null;
+}
+
+async function confirmRemoveCartItem() {
+    if (!pendingRemoveCartItemId) return;
+
+    const itemId = pendingRemoveCartItemId;
+    const modal = document.getElementById('removeCartModal');
+    const confirmButton = modal.querySelector(
+        'button[onclick="confirmRemoveCartItem()"]'
+    );
+
+    confirmButton.disabled = true;
+    confirmButton.textContent = 'Menghapus...';
+
+    const formData = new FormData();
+    formData.append('cart_item_id', itemId);
+    formData.append('action', 'remove');
+    formData.append(
+        '_token',
+        document.querySelector('meta[name="csrf-token"]')?.content || ''
+    );
+
+    try {
+        const response = await fetch(
+            "{{ route('cart.updateQuantity') }}",
+            {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Gagal menghapus barang.');
+        }
+
+        const input = document.querySelector(
+            `.cart-quantity[data-cart-item-id="${itemId}"]`
+        );
+
+        if (input) {
+            const itemElement = input.closest(
+                '.flex.items-center.justify-between.border-b'
+            );
+
+            if (itemElement) {
+                itemElement.remove();
+            }
+        }
+
+        const total = document.getElementById('cartTotal');
+
+        if (total) {
+            total.textContent = 'Rp ' +
+                Number(data.total).toLocaleString('id-ID');
+        }
+
+        closeRemoveCartModal();
+
+    } catch (error) {
+        alert('Gagal menghapus barang: ' + error.message);
+        console.error(error);
+    } finally {
+        confirmButton.disabled = false;
+        confirmButton.textContent = 'Ya, Hapus';
+    }
+}
+
+async function updateCartQuantity(itemId, action, element) {
+    const input = document.querySelector(
+        `.cart-quantity[data-cart-item-id="${itemId}"]`
+    );
+
+    if (!input) return;
+
+    const oldQuantity = parseInt(input.value) || 1;
+    let newQuantity = oldQuantity;
+
+    if (action === 'increase') {
+        newQuantity++;
+    } else if (action === 'decrease') {
+        newQuantity--;
+    } else if (action === 'set') {
+        newQuantity = parseInt(input.value);
+    }
+
+    if (!Number.isInteger(newQuantity) || newQuantity < 1) {
+        input.value = oldQuantity;
+
+        if (action === 'decrease' && oldQuantity === 1) {
+            showRemoveCartModal(itemId);
+        }
+
+        return;
+    }
+
+    const buttons = input.parentElement.querySelectorAll('button');
+    buttons.forEach(button => button.disabled = true);
+    input.disabled = true;
+
+    const formData = new FormData();
+    formData.append('cart_item_id', itemId);
+    formData.append('quantity', newQuantity);
+    formData.append('action', action);
+    formData.append(
+        '_token',
+        document.querySelector('meta[name="csrf-token"]')?.content || ''
+    );
+
+    try {
+        const response = await fetch(
+            "{{ route('cart.updateQuantity') }}",
+            {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Gagal memperbarui keranjang.');
+        }
+
+        input.value = data.quantity;
+
+        const subtotal = document.querySelector(
+            `.cart-subtotal[data-cart-item-id="${itemId}"]`
+        );
+
+        if (subtotal) {
+            subtotal.textContent = 'Rp ' +
+                Number(data.subtotal).toLocaleString('id-ID');
+        }
+
+        const total = document.getElementById('cartTotal');
+
+        if (total) {
+            total.textContent = 'Rp ' +
+                Number(data.total).toLocaleString('id-ID');
+        }
+
+    } catch (error) {
+        input.value = oldQuantity;
+        alert('Gagal memperbarui keranjang: ' + error.message);
+        console.error(error);
+    } finally {
+        buttons.forEach(button => button.disabled = false);
+        input.disabled = false;
+    }
+}
+</script>
+
+
+<!-- Popup Konfirmasi Hapus Barang -->
+<div id="removeCartModal"
+    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4">
+
+    <div class="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl">
+        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-2xl text-red-600">
+            !
+        </div>
+
+        <h3 class="mb-2 text-lg font-bold text-gray-800">
+            Hapus Barang?
+        </h3>
+
+        <p class="mb-6 text-sm text-gray-500">
+            Kamu yakin ingin menghapus barang ini dari keranjang?
+        </p>
+
+        <div class="flex gap-3">
+            <button type="button"
+                onclick="closeRemoveCartModal()"
+                class="flex-1 rounded-xl border border-gray-300 px-4 py-3 font-semibold text-gray-700 hover:bg-gray-100">
+                Batal
+            </button>
+
+            <button type="button"
+                onclick="confirmRemoveCartItem()"
+                class="flex-1 rounded-xl bg-red-600 px-4 py-3 font-semibold text-white hover:bg-red-700">
+                Ya, Hapus
+            </button>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

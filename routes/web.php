@@ -13,6 +13,9 @@ Route::get('/', [ShopController::class, 'index'])->name('shop.index');
 // Rute untuk menambah ke keranjang (sementara middleware auth dilepas agar tidak error login)
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 
+// Rute untuk mengubah jumlah produk di keranjang
+Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])
+    ->name('cart.updateQuantity');
 Route::prefix('admin')->name('admin.products.')->group(function () {
     Route::resource('products', ProductController::class);
 });
