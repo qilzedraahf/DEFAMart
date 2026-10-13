@@ -8,6 +8,25 @@
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col justify-between">
 
+@if (session('success'))
+    <div style="background:#d1fae5;color:#065f46;padding:15px;margin:15px;">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+    <div style="background:#fee2e2;color:#991b1b;padding:15px;margin:15px;">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div style="background:#fee2e2;color:#991b1b;padding:15px;margin:15px;">
+        @foreach ($errors->all() as $error)
+            <p>{{ $error }}</p>
+        @endforeach
+    </div>
+@endif
     <div>
         <!-- Navbar Atas -->
         <!-- Ubah tag header dari yang lama menjadi seperti ini -->
@@ -550,27 +569,55 @@
                 <span class="text-xl font-extrabold text-red-600">Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}</span>
             </div>
             
+        php
+@if (session('success'))
+    <div style="background:#d1fae5;color:#065f46;padding:15px;margin:10px;border-radius:8px;">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+    <div style="background:#fee2e2;color:#991b1b;padding:15px;margin:10px;border-radius:8px;">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div style="background:#fee2e2;color:#991b1b;padding:15px;margin:10px;border-radius:8px;">
+        @foreach ($errors->all() as $error)
+            <p>{{ $error }}</p>
+        @endforeach
+    </div>
+@endif
+
             <form action="{{ route('order.checkout') }}" method="POST">
-                @csrf
-                <input type="hidden" name="shipping_address" value="Alamat Default Uji Coba">
-                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl shadow transition text-center">
-                    Lanjut ke Pembayaran
-                </button>
-            </form>
+    @csrf
+    <input type="hidden" name="shipping_address" value="Alamat pengiriman untuk testing">
+
+    <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-4 rounded-xl">
+        Lanjut ke Pembayaran
+    </button>
+</form>
         </div>
 
     </div>
 
     <!-- Skrip JavaScript untuk Buka/Tutup Panel Samping -->
     <script>
-        function toggleCart(event) {
-            if (event) event.preventDefault(); // Mencegah halaman refresh atau meloncat
-            const drawer = document.getElementById('cartDrawer');
-            const overlay = document.getElementById('cartOverlay');
-            
-            drawer.classList.toggle('translate-x-full');
-            overlay.classList.toggle('hidden');
-        }
+    function toggleCart(event) {
+    if (event) event.preventDefault();
+
+    const drawer = document.getElementById('cartDrawer');
+    const overlay = document.getElementById('cartOverlay');
+
+    if (!drawer || !overlay) return;
+
+    const tertutup = drawer.classList.contains('translate-x-full');
+
+    drawer.classList.toggle('translate-x-full', !tertutup);
+    overlay.classList.toggle('hidden', tertutup);
+}
+
     </script>
 
     <script>

@@ -12,78 +12,85 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    // Menampilkan riwayat pesanan user
-    public function index()
-    {
-        $orders = Order::with('items.product')->where('user_id', Auth::id())->latest()->get();
-        return response()->json($orders); // Sementara testing pakai JSON
-    }
-
-    // Proses Checkout (Membuat Pesanan dari Keranjang)
     public function checkout(Request $request)
     {
-        // 1. Validasi alamat pengiriman
         $request->validate([
             'shipping_address' => 'required|string',
         ]);
 
-        $userId = Auth::id();
+        $userId = Auth::id() ?? 1;
 
-        // 2. Ambil keranjang user beserta item dan produknya
-        $cart = Cart::with('items.product')->where('user_id', $userId)->first();
+        $cart = Cart::with('items.product')
+            ->where('user_id', $userId)
+            ->first();
 
         if (!$cart || $cart->items->isEmpty()) {
-            return redirect()->back()->with('error', 'Keranjang belanja DEFAMart Anda masih kosong!');
-        }
-
-        // Menggunakan Database Transaction agar aman (jika ada error, semua dibatalkan)
-        DB::beginTransaction();
+    return redirect('/')
+        ->with('error', 'Keranjang kosong untuk user ID: ' . $userId);
+}
 
         try {
+            DB::beginTransaction();
+
             $totalPrice = 0;
 
-            // Hitung total harga sekaligus cek ketersediaan stok
             foreach ($cart->items as $item) {
-                if ($item->quantity > $item->product->stock) {
-                    throw new \Exception("Stok produk '{$item->product->name}' tidak mencukupi!");
+                if (!$item->product) {
+                    throw new \Exception('Produk tidak ditemukan.');
                 }
-                $totalPrice += $item->product->price * $item->quantity;
+
+                if ($item->quantity > $item->product->stock) {
+                    throw new \Exception(
+                        'Stok produk tidak mencukupi.'
+                    );
+                }
+
+                $totalPrice +=
+                    $item->product->price * $item->quantity;
             }
 
-            // 3. Buat data pesanan utama di tabel 'orders'
             $order = Order::create([
-                'user_id'          => $userId,
-                'total_price'      => $totalPrice,
-                'status'           => 'pending', // Status awal pesanan
+                'user_id' => $userId,
+                'total_price' => $totalPrice,
+                'status' => 'pending',
                 'shipping_address' => $request->shipping_address,
             ]);
 
-            // 4. Pindahkan item keranjang ke 'order_items' dan kurangi stok produk
             foreach ($cart->items as $item) {
                 OrderItem::create([
-                    'order_id'   => $order->id,
+                    'order_id' => $order->id,
                     'product_id' => $item->product_id,
-                    'quantity'   => $item->quantity,
-                    'price'      => $item->product->price, // Simpan harga saat dibeli
+                    'quantity' => $item->quantity,
+                    'price' => $item->product->price,
                 ]);
 
-                // Kurangi stok produk
-                $product = Product::find($item->product_id);
+                $product = Product::findOrFail($item->product_id);
                 $product->stock -= $item->quantity;
                 $product->save();
             }
 
-            // 5. Hapus isi keranjang karena sudah di-checkout
             $cart->items()->delete();
             $cart->delete();
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Pesanan DEFAMart berhasil dibuat! Silakan lakukan pembayaran.');
+            return redirect()->route(
+                'order.payment',
+                $order->id
+            );
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', $e->getMessage());
+
+            return redirect('/')
+                ->with('error', 'Checkout gagal: ' . $e->getMessage());
         }
+    }
+
+    public function payment(Order $order)
+    {
+        $order->load('items.product');
+
+        return view('orders.payment', compact('order'));
     }
 }

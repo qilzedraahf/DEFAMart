@@ -21,6 +21,10 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
 Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
 
+
+Route::get('/order/{order}/payment', [OrderController::class, 'payment'])
+    ->name('order.payment');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
