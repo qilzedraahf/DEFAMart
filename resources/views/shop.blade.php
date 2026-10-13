@@ -546,8 +546,8 @@
         });
     </script>
 
-    <!-- Overlay Gelap di Belakang Panel -->
-    <div id="cartOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden transition-opacity" onclick="toggleCart()"></div>
+    <!-- Overlay di Belakang Panel -->
+<div id="cartOverlay" class="fixed inset-0 z-40 hidden transition-opacity" onclick="toggleCart()"></div>
 
     <!-- Panel Samping Keranjang Belanja -->
     <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
