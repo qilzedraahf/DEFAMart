@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -161,36 +160,36 @@
                                             <h4 class="text-sm font-semibold text-gray-800 line-clamp-1">{{ $item->product->name }}</h4>
                                            
 
-<p class="text-xs text-gray-500 mb-2">
-    Rp {{ number_format($item->product->price, 0, ',', '.') }} / item
-</p>
+                                            <p class="text-xs text-gray-500 mb-2">
+                                                Rp {{ number_format($item->product->price, 0, ',', '.') }} / item
+                                            </p>
 
-<div class="flex items-center gap-2">
-    <button type="button"
-        onclick="updateCartQuantity({{ $item->id }}, 'decrease', this)"
-        class="w-8 h-8 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
-        −
-    </button>
+                                            <div class="flex items-center gap-2">
+                                                <button type="button"
+                                                    onclick="updateCartQuantity({{ $item->id }}, 'decrease', this)"
+                                                    class="w-8 h-8 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
+                                                    −
+                                                </button>
 
-    <input type="number"
-        min="1"
-        value="{{ $item->quantity }}"
-        data-cart-item-id="{{ $item->id }}"
-        data-price="{{ $item->product->price }}"
-        onchange="updateCartQuantity({{ $item->id }}, 'set', this)"
-        class="cart-quantity w-14 h-8 text-center text-base font-bold text-gray-800 bg-white border border-gray-300 rounded-lg">
+                                                <input type="number"
+                                                    min="1"
+                                                    value="{{ $item->quantity }}"
+                                                    data-cart-item-id="{{ $item->id }}"
+                                                    data-price="{{ $item->product->price }}"
+                                                    onchange="updateCartQuantity({{ $item->id }}, 'set', this)"
+                                                    class="cart-quantity w-14 h-8 text-center text-base font-bold text-gray-800 bg-white border border-gray-300 rounded-lg">
 
-    <button type="button"
-        onclick="updateCartQuantity({{ $item->id }}, 'increase', this)"
-        class="w-8 h-8 rounded-lg bg-[#134e32] text-white hover:bg-[#0f3e28]">
-        +
-    </button>
-</div>
+                                                <button type="button"
+                                                    onclick="updateCartQuantity({{ $item->id }}, 'increase', this)"
+                                                    class="w-8 h-8 rounded-lg bg-[#134e32] text-white hover:bg-[#0f3e28]">
+                                                    +
+                                                </button>
+                                            </div>
 
-<p class="cart-subtotal text-sm font-bold text-[#134e32] mt-2"
-   data-cart-item-id="{{ $item->id }}">
-    Rp {{ number_format($subtotal, 0, ',', '.') }}
-</p>
+                                            <p class="cart-subtotal text-sm font-bold text-[#134e32] mt-2"
+                                            data-cart-item-id="{{ $item->id }}">
+                                                Rp {{ number_format($subtotal, 0, ',', '.') }}
+                                            </p>
 
                                         </div>
                                     </div>
@@ -206,7 +205,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-base font-semibold text-gray-700">Total Harga:</span>
                        
-<span id="cartTotal" class="text-xl font-extrabold text-[#134e32]">Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}</span>
+                        <span id="cartTotal" class="text-xl font-extrabold text-[#134e32]">Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}</span>
 
                     </div>
                     
