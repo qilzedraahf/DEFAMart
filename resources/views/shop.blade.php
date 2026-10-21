@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEFAMart - Belanja Mudah & Cepat</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+    <html lang="id">
+        <head>
+            <meta name="csrf-token" content="{{ csrf_token() }}">
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>DEFAMart - Belanja Mudah & Cepat</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+        </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col justify-between">
 
@@ -53,9 +53,11 @@
                 <div>
                     <button type="button" onclick="toggleCart(event)" class="bg-[#0f3e28] hover:bg-[#0b2f1f] text-white px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2 border border-emerald-700 shadow transition">
                         <span>🛒 Keranjang</span>
-                        <span class="bg-yellow-400 text-gray-900 font-bold px-2 py-0.5 rounded-full text-xs">
-                            {{ isset($cartCount) ? $cartCount : 0 }}
-                        </span>
+                       
+<span id="cartCount" class="bg-yellow-400 text-gray-900 font-bold px-2 py-0.5 rounded-full text-xs">
+    {{ isset($cartCount) ? $cartCount : 0 }}
+</span>
+
                     </button>
                 </div>
 
@@ -121,105 +123,8 @@
 
             </div>
 
-            <!-- Panel Samping Keranjang Belanja (Nuansa Hijau) -->
-            <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
-                
-                <div>
-                    <div class="flex items-center justify-between p-5 border-b border-gray-200">
-                        <h2 class="text-lg font-bold text-gray-800">Keranjang Belanja Anda</h2>
-                        <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-xl font-bold px-2">&times;</button>
-                    </div>
+         
 
-                    <div class="p-5 overflow-y-auto max-h-[calc(100vh-220px)] space-y-4">
-                        @php
-                            $userId = Auth::id() ?? 1;
-                            $userCart = \App\Models\Cart::with('items.product')->where('user_id', $userId)->first();
-                            $totalPrice = 0;
-                        @endphp
-
-                        @if(!$userCart || $userCart->items->isEmpty())
-                            <div class="flex flex-col items-center justify-center py-20 text-gray-400 text-center">
-                                <p class="text-sm">Keranjang Anda masih kosong.</p>
-                            </div>
-                        @else
-                            @foreach($userCart->items as $item)
-                                @php 
-                                    $subtotal = $item->product->price * $item->quantity;
-                                    $totalPrice += $subtotal;
-                                @endphp
-                                <div class="flex items-center justify-between border-b pb-3">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-14 h-14 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
-                                            @if($item->product->image)
-                                                <img src="{{ asset('storage/' . $item->product->image) }}" class="w-full h-full object-cover">
-                                            @else
-                                                <span class="text-[10px] text-gray-400">No Image</span>
-                                            @endif
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-semibold text-gray-800 line-clamp-1">{{ $item->product->name }}</h4>
-                                           
-
-                                            <p class="text-xs text-gray-500 mb-2">
-                                                Rp {{ number_format($item->product->price, 0, ',', '.') }} / item
-                                            </p>
-
-                                            <div class="flex items-center gap-2">
-                                                <button type="button"
-                                                    onclick="updateCartQuantity({{ $item->id }}, 'decrease', this)"
-                                                    class="w-8 h-8 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
-                                                    −
-                                                </button>
-
-                                                <input type="number"
-                                                    min="1"
-                                                    value="{{ $item->quantity }}"
-                                                    data-cart-item-id="{{ $item->id }}"
-                                                    data-price="{{ $item->product->price }}"
-                                                    onchange="updateCartQuantity({{ $item->id }}, 'set', this)"
-                                                    class="cart-quantity w-14 h-8 text-center text-base font-bold text-gray-800 bg-white border border-gray-300 rounded-lg">
-
-                                                <button type="button"
-                                                    onclick="updateCartQuantity({{ $item->id }}, 'increase', this)"
-                                                    class="w-8 h-8 rounded-lg bg-[#134e32] text-white hover:bg-[#0f3e28]">
-                                                    +
-                                                </button>
-                                            </div>
-
-                                            <p class="cart-subtotal text-sm font-bold text-[#134e32] mt-2"
-                                            data-cart-item-id="{{ $item->id }}">
-                                                Rp {{ number_format($subtotal, 0, ',', '.') }}
-                                            </p>
-
-                                        </div>
-                                    </div>
-                                  
-                                </div>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Bagian Bawah: Total Harga & Tombol Checkout Nuansa Hijau -->
-                <div class="p-5 border-t border-gray-200 bg-gray-50">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-base font-semibold text-gray-700">Total Harga:</span>
-                       
-                        <span id="cartTotal" class="text-xl font-extrabold text-[#134e32]">Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}</span>
-
-                    </div>
-                    
-                    <form action="{{ route('order.checkout') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="shipping_address" value="Alamat Default Uji Coba">
-                        <!-- Tombol Pembayaran dengan Warna Hijau Utama DEFAMart -->
-                        <button type="submit" class="w-full bg-[#134e32] hover:bg-[#0f3e28] text-white font-bold py-3 rounded-xl shadow transition text-center">
-                            Lanjut ke Pembayaran
-                        </button>
-                    </form>
-                </div>
-
-            </div>
         </header>
 
         <!-- Konten Utama -->
@@ -242,7 +147,7 @@
                         <!-- Bagian Bawah Banner 1 -->
                         <div class="flex justify-between items-end z-10 mt-4">
                             <span class="text-xs bg-black/20 px-3 py-1.5 rounded-lg font-medium">Voucher tersedia untuk member</span>
-                            <a href="#" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
+                            <a href="#" onclick="event.preventDefault()" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
                                 KLIK DI SINI
                             </a>
                         </div>
@@ -260,7 +165,7 @@
                         <!-- Bagian Bawah Banner 2 -->
                         <div class="flex justify-between items-end z-10 mt-4">
                             <span class="text-xs bg-purple-900/40 px-3 py-1.5 rounded-lg font-medium text-purple-100">Periode 20–25 September</span>
-                            <a href="#" class="bg-amber-300 hover:bg-amber-400 text-purple-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
+                            <a href="#" onclick="event.preventDefault()" class="bg-amber-300 hover:bg-amber-400 text-purple-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
                                 AMBIL PROMO
                             </a>
                         </div>
@@ -278,7 +183,7 @@
                         <!-- Bagian Bawah Banner 3 -->
                         <div class="flex justify-between items-end z-10 mt-4">
                             <span class="text-xs bg-teal-900/40 px-3 py-1.5 rounded-lg font-medium text-teal-100">Tanpa Minimum Belanja</span>
-                            <a href="#" class="bg-emerald-300 hover:bg-emerald-400 text-teal-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
+                            <a href="#" onclick="event.preventDefault()" class="bg-emerald-300 hover:bg-emerald-400 text-teal-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
                                 CEK VOUCHER
                             </a>
                         </div>
@@ -296,7 +201,7 @@
                         <!-- Bagian Bawah Banner 4 -->
                         <div class="flex justify-between items-end z-10 mt-4">
                             <span class="text-xs bg-orange-950/40 px-3 py-1.5 rounded-lg font-medium text-orange-100">Berakhir Pukul 23:59</span>
-                            <a href="#" class="bg-white hover:bg-orange-50 text-orange-700 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
+                            <a href="#" onclick="event.preventDefault()" class="bg-white hover:bg-orange-50 text-orange-700 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
                                 BELI SEKARANG
                             </a>
                         </div>
@@ -314,7 +219,7 @@
                         <!-- Bagian Bawah Banner 5 -->
                         <div class="flex justify-between items-end z-10 mt-4">
                             <span class="text-xs bg-blue-950/40 px-3 py-1.5 rounded-lg font-medium text-blue-100">Khusus Member DEFAMart</span>
-                            <a href="#" class="bg-cyan-300 hover:bg-cyan-400 text-blue-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
+                            <a href="#" onclick="event.preventDefault()" class="bg-cyan-300 hover:bg-cyan-400 text-blue-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
                                 KUMPULKAN POIN
                             </a>
                         </div>
@@ -492,17 +397,12 @@
                         @foreach($products as $product)
                             <div class="border border-gray-200 rounded-xl p-4 flex flex-col justify-between hover:shadow-md transition">
                                 <div>
-                                    <!-- Kotak Gambar Produk Disesuaikan ke Rasio 4:3 (800x600 px) -->
                                     <div class="w-full aspect-[4/3] bg-gray-100 rounded-lg mb-3 overflow-hidden flex items-center justify-center">
-                                        @if($product->image)
-                                            <!-- Jika produk punya gambar di database -->
-                                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
-                                        @else
-                                            <!-- Jika produk kosong/tidak ada gambar -->
-                                            <span class="text-xs text-gray-400">Tidak ada gambar</span>
-                                        @endif
+                                        <!-- Otomatis membuat gambar berlatar warna dengan inisial nama produk -->
+                                        <img src="https://ui-avatars.com/api/?name={{ urlencode($product->name) }}&background=random&color=fff&size=250&bold=true" 
+                                            alt="{{ $product->name }}" 
+                                            class="w-full h-full object-cover">
                                     </div>
-
                                     <span class="text-xs text-emerald-600 font-semibold">{{ $product->category->name ?? 'Kategori' }}</span>
                                     <h3 class="font-bold text-gray-800 text-sm mb-1 line-clamp-2">{{ $product->name }}</h3>
                                     <p class="text-emerald-700 font-extrabold text-base mb-2">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
@@ -537,29 +437,31 @@
         let typingTimer;
         const doneTypingInterval = 300; // Jeda 300ms agar pencarian berjalan mulus saat diketik
 
-        searchInput.addEventListener('input', function () {
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(function () {
-                searchForm.submit();
-            }, doneTypingInterval);
-        });
+        if (searchInput && searchForm) {
+            searchInput.addEventListener('input', function () {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(function () {
+                    searchForm.submit();
+                }, doneTypingInterval);
+            });
+        }
     </script>
 
     <!-- Overlay di Belakang Panel -->
-<div id="cartOverlay" class="fixed inset-0 z-40 hidden transition-opacity" onclick="toggleCart()"></div>
+<div id="cartOverlay" class="fixed inset-0 z-40 hidden bg-black/40 transition-opacity" onclick="toggleCart()"></div>
 
     <!-- Panel Samping Keranjang Belanja -->
-    <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
+    <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
         
-        <!-- Bagian Atas: Header Keranjang -->
-        <div>
-            <div class="flex items-center justify-between p-5 border-b border-gray-200">
+        <!-- Bagian Atas: Header dan Daftar Barang -->
+        <div class="flex flex-col flex-1 min-h-0">
+            <div class="flex items-center justify-between p-5 border-b border-gray-200 flex-shrink-0">
                 <h2 class="text-lg font-bold text-gray-800">Keranjang Belanja Anda</h2>
                 <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-xl font-bold px-2">&times;</button>
             </div>
 
             <!-- Daftar Item di Keranjang -->
-            <div class="p-5 overflow-y-auto max-h-[calc(100vh-220px)] space-y-4">
+            <div id="cartItemsList" class="flex-1 min-h-0 overflow-y-auto p-5 space-y-4">
                 @php
                     $userId = Auth::id() ?? 1;
                     $userCart = \App\Models\Cart::with('items.product')->where('user_id', $userId)->first();
@@ -567,8 +469,17 @@
                 @endphp
 
                 @if(!$userCart || $userCart->items->isEmpty())
-                    <div class="flex flex-col items-center justify-center py-20 text-gray-400 text-center">
-                        <p class="text-sm">Keranjang Anda masih kosong.</p>
+                    <div class="flex flex-col items-center justify-center py-8 px-4 text-center">
+                        <div class="flex items-center justify-center w-16 h-16 rounded-full bg-emerald-50 mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-emerald-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="9" cy="21" r="1"/>
+                                <circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                <path d="M9 10h10M10 13h8"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-bold text-emerald-900 mb-2">Keranjang Anda Saat Ini Masih Kosong</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed max-w-xs">Yuk belanja dan temukan produk favoritmu di DEFAMart!</p>
                     </div>
                 @else
                     @foreach($userCart->items as $item)
@@ -578,6 +489,7 @@
                         @endphp
                         <div class="flex items-center justify-between border-b pb-3">
                             <div class="flex items-center space-x-3">
+                                <input type="checkbox" class="cart-item-checkbox w-4 h-4 accent-emerald-700 cursor-pointer" data-cart-item-id="{{ $item->id }}" checked aria-label="Pilih {{ $item->product->name }}">
                                 <div class="w-14 h-14 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
                                     @if($item->product->image)
                                         <img src="{{ asset('storage/' . $item->product->image) }}" class="w-full h-full object-cover">
@@ -587,52 +499,106 @@
                                 </div>
                                 <div>
                                     <h4 class="text-sm font-semibold text-gray-800 line-clamp-1">{{ $item->product->name }}</h4>
-                                    <p class="text-xs text-gray-500">{{ $item->quantity }} x Rp {{ number_format($item->product->price, 0, ',', '.') }}</p>
+                                    
+
+<div class="flex items-center gap-2 mt-1">
+    <button
+        type="button"
+        onclick="updateCartQuantity({{ $item->id }}, 'decrease', this)"
+        class="w-7 h-7 border rounded-md text-gray-700 hover:bg-gray-100">
+        −
+    </button>
+
+    <input
+        type="number"
+        min="1"
+        value="{{ $item->quantity }}"
+        data-cart-item-id="{{ $item->id }}"
+        class="cart-quantity w-12 h-7 border rounded-md text-center text-sm"
+        onchange="updateCartQuantity({{ $item->id }}, 'set', this)">
+
+    <button
+        type="button"
+        onclick="updateCartQuantity({{ $item->id }}, 'increase', this)"
+        class="w-7 h-7 border rounded-md text-gray-700 hover:bg-gray-100">
+        +
+    </button>
+
+    <span class="text-xs text-gray-500">
+        Rp {{ number_format($item->product->price, 0, ',', '.') }}/produk
+    </span>
+</div>
+
+
                                 </div>
                             </div>
-                            <p class="text-sm font-bold text-red-600">Rp {{ number_format($subtotal, 0, ',', '.') }}</p>
+                            <p
+    class="text-sm font-bold text-emerald-700 cart-subtotal"
+    data-cart-item-id="{{ $item->id }}" data-subtotal="{{ $subtotal }}">
+    Rp {{ number_format($subtotal, 0, ',', '.') }}
+</p>
                         </div>
                     @endforeach
                 @endif
             </div>
         </div>
 
+        <!-- Popup Konfirmasi Hapus Barang -->
+        <div id="removeCartModal"
+            class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/50 p-4">
+
+            <div class="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-2xl text-red-600">
+                    !
+                </div>
+
+                <h3 class="mb-2 text-lg font-bold text-gray-800">
+                    Hapus Barang?
+                </h3>
+
+                <p class="mb-6 text-sm text-gray-500">
+                    Kamu yakin ingin menghapus barang ini dari keranjang?
+                </p>
+
+                <div class="flex gap-3">
+                    <button type="button"
+                        onclick="closeRemoveCartModal()"
+                        class="flex-1 rounded-xl border border-gray-300 px-4 py-3 font-semibold text-gray-700 hover:bg-gray-100">
+                        Batal
+                    </button>
+
+                    <button type="button"
+                        onclick="confirmRemoveCartItem()"
+                        class="flex-1 rounded-xl bg-red-600 px-4 py-3 font-semibold text-white hover:bg-red-700">
+                        Ya, Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Bagian Bawah: Total Harga & Tombol Checkout -->
-        <div class="p-5 border-t border-gray-200 bg-gray-50">
+        <div class="flex-shrink-0 p-5 border-t border-gray-200 bg-gray-50">
             <div class="flex items-center justify-between mb-4">
                 <span class="text-base font-semibold text-gray-700">Total Harga:</span>
-                <span class="text-xl font-extrabold text-red-600">Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}</span>
+                <span id="cartTotal" class="text-xl font-extrabold text-emerald-700">
+    Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}
+</span>
             </div>
-            
-        php
-@if (session('success'))
-    <div style="background:#d1fae5;color:#065f46;padding:15px;margin:10px;border-radius:8px;">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if (session('error'))
-    <div style="background:#fee2e2;color:#991b1b;padding:15px;margin:10px;border-radius:8px;">
-        {{ session('error') }}
-    </div>
-@endif
-
-@if ($errors->any())
-    <div style="background:#fee2e2;color:#991b1b;padding:15px;margin:10px;border-radius:8px;">
-        @foreach ($errors->all() as $error)
-            <p>{{ $error }}</p>
-        @endforeach
-    </div>
-@endif
-
-            <form action="{{ route('order.checkout') }}" method="POST">
-    @csrf
-    <input type="hidden" name="shipping_address" value="Alamat pengiriman untuk testing">
-
-    <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-4 rounded-xl">
-        Lanjut ke Pembayaran
-    </button>
-</form>
+        <div id="cartCheckoutSection">
+            @if($userCart && $userCart->items->isNotEmpty())
+                <form action="{{ route('order.checkout') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="shipping_address" value="Alamat pengiriman untuk testing">
+                    <button type="submit" class="w-full bg-[#134e32] hover:bg-[#0f3e28] text-white font-bold py-3 rounded-xl shadow transition">
+                        Lanjut ke Pembayaran
+                    </button>
+                </form>
+            @else
+                <button type="button" disabled class="w-full bg-gray-300 text-gray-500 font-bold py-3 rounded-xl cursor-not-allowed">
+                    Keranjang Kosong
+                </button>
+            @endif
+        </div>
         </div>
 
     </div>
@@ -640,49 +606,276 @@
     <!-- Skrip JavaScript untuk Buka/Tutup Panel Samping -->
     <script>
     function toggleCart(event) {
-    if (event) event.preventDefault();
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
 
     const drawer = document.getElementById('cartDrawer');
     const overlay = document.getElementById('cartOverlay');
 
     if (!drawer || !overlay) return;
 
-    const tertutup = drawer.classList.contains('translate-x-full');
+    // Cek status apakah drawer sedang tertutup (memiliki kelas translate-x-full)
+    const isClosed = drawer.classList.contains('translate-x-full');
 
-    drawer.classList.toggle('translate-x-full', !tertutup);
-    overlay.classList.toggle('hidden', tertutup);
+    if (isClosed) {
+        drawer.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+    } else {
+        drawer.classList.add('translate-x-full');
+        overlay.classList.add('hidden');
+    }
 }
 
     </script>
 
     <script>
+    
     // Menangkap semua form tambah ke keranjang
-    document.querySelectorAll('.add-to-cart-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Mencegah halaman refresh bawaan form
+    function updateCartCheckout(items) {
+        const section = document.getElementById('cartCheckoutSection');
+        if (!section) return;
 
-            let formData = new FormData(this);
+        if (items && items.length > 0) {
+            section.innerHTML = `
+                <form action="{{ route('order.checkout') }}" method="POST">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="shipping_address" value="Alamat pengiriman untuk testing">
+                    <button type="submit" class="w-full bg-[#134e32] hover:bg-[#0f3e28] text-white font-bold py-3 rounded-xl shadow transition">
+                        Lanjut ke Pembayaran
+                    </button>
+                </form>
+            `;
+            updateSelectedCartSummary();
+        } else {
+            section.innerHTML = `
+                <button type="button" disabled class="w-full bg-gray-300 text-gray-500 font-bold py-3 rounded-xl cursor-not-allowed">
+                    Keranjang Kosong
+                </button>
+            `;
+        }
+    }
 
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    function updateSelectedCartSummary() {
+        const checkboxes = Array.from(
+            document.querySelectorAll('.cart-item-checkbox:checked')
+        );
+
+        let total = 0;
+
+        checkboxes.forEach(checkbox => {
+            const id = checkbox.dataset.cartItemId;
+            const subtotal = document.querySelector(
+                `.cart-subtotal[data-cart-item-id="${id}"]`
+            );
+
+            if (subtotal) {
+                const value = subtotal.dataset.subtotal !== undefined
+                    ? Number(subtotal.dataset.subtotal)
+                    : Number(subtotal.textContent.replace(/[^\d]/g, ''));
+
+                if (Number.isFinite(value)) {
+                    total += value;
                 }
-            })
-            .then(response => {
-                // Langsung muat ulang halaman dengan mulus setelah produk masuk database
-                location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Fallback jika terjadi kendala, lakukan submit standar
-                this.submit();
+            }
+        });
+
+        const totalElement = document.getElementById('cartTotal');
+        if (totalElement) {
+            totalElement.textContent = 'Rp ' + total.toLocaleString('id-ID');
+        }
+
+        const section = document.getElementById('cartCheckoutSection');
+        const form = section ? section.querySelector('form') : null;
+
+        if (form) {
+            form.querySelectorAll('input[name="selected_items[]"]').forEach(input => {
+                input.remove();
             });
+
+            checkboxes.forEach(checkbox => {
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'selected_items[]';
+                hidden.value = checkbox.dataset.cartItemId;
+                form.appendChild(hidden);
+            });
+
+            const button = form.querySelector('button[type="submit"]');
+            if (button) {
+                button.disabled = checkboxes.length === 0;
+                button.classList.toggle('opacity-50', checkboxes.length === 0);
+                button.classList.toggle('cursor-not-allowed', checkboxes.length === 0);
+            }
+        }
+    }
+
+    document.addEventListener('change', function (event) {
+        if (event.target.matches('.cart-item-checkbox')) {
+            updateSelectedCartSummary();
+        }
+    });
+
+    updateSelectedCartSummary();
+
+    function renderCartItems(items) {
+        const list = document.getElementById('cartItemsList');
+        if (!list) return;
+
+        list.replaceChildren();
+        updateCartCheckout(items);
+
+        if (!items || items.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'flex flex-col items-center justify-center py-8 px-4 text-center';
+            empty.innerHTML = `
+                <div class="flex items-center justify-center w-16 h-16 rounded-full bg-emerald-50 mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-emerald-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        <path d="M9 10h10M10 13h8"/>
+                    </svg>
+                </div>
+                <h3 class="text-base font-bold text-emerald-900 mb-2">Keranjang Anda Saat Ini Masih Kosong</h3>
+                <p class="text-sm text-gray-600 leading-relaxed max-w-xs">Yuk belanja dan temukan produk favoritmu di DEFAMart!</p>
+            `;
+            list.appendChild(empty);
+            updateSelectedCartSummary();
+            return;
+        }
+
+        items.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'cart-item-row flex items-center justify-between border-b pb-3';
+            row.dataset.cartItemId = item.id;
+
+            const left = document.createElement('div');
+            left.className = 'flex items-center space-x-3';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'cart-item-checkbox w-4 h-4 accent-emerald-700 cursor-pointer';
+            checkbox.dataset.cartItemId = item.id;
+            checkbox.checked = true;
+            checkbox.setAttribute('aria-label', 'Pilih ' + (item.name || 'Produk'));
+
+            checkbox.addEventListener('change', updateSelectedCartSummary);
+
+            const imageBox = document.createElement('div');
+            imageBox.className = 'w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0';
+
+            const img = document.createElement('img');
+            img.src = 'https://ui-avatars.com/api/?name='
+                + encodeURIComponent(item.name || 'Produk')
+                + '&background=random&color=fff&size=250&bold=true';
+            img.alt = item.name || 'Produk';
+            img.className = 'w-full h-full object-cover';
+            imageBox.appendChild(img);
+
+            const details = document.createElement('div');
+            const name = document.createElement('h4');
+            name.className = 'text-sm font-semibold text-gray-800 line-clamp-1';
+            name.textContent = item.name || 'Produk';
+            details.appendChild(name);
+
+            const controls = document.createElement('div');
+            controls.className = 'flex items-center gap-2 mt-1';
+
+            const decrease = document.createElement('button');
+            decrease.type = 'button';
+            decrease.className = 'w-7 h-7 border rounded-md text-sm';
+            decrease.textContent = '−';
+            decrease.addEventListener('click', function () {
+                updateCartQuantity(item.id, 'decrease', this);
+            });
+
+            const quantity = document.createElement('input');
+            quantity.type = 'number';
+            quantity.min = '1';
+            quantity.value = item.quantity;
+            quantity.dataset.cartItemId = item.id;
+            quantity.className = 'cart-quantity w-12 h-7 border rounded-md text-center text-sm';
+            quantity.addEventListener('change', function () {
+                updateCartQuantity(item.id, 'set', this);
+            });
+
+            const increase = document.createElement('button');
+            increase.type = 'button';
+            increase.className = 'w-7 h-7 border rounded-md text-sm';
+            increase.textContent = '+';
+            increase.addEventListener('click', function () {
+                updateCartQuantity(item.id, 'increase', this);
+            });
+
+            const price = document.createElement('span');
+            price.className = 'text-xs text-gray-500';
+            price.textContent = 'Rp ' + Number(item.price).toLocaleString('id-ID') + '/produk';
+
+            controls.append(decrease, quantity, increase, price);
+            details.appendChild(controls);
+            left.append(checkbox, imageBox, details);
+
+            const subtotal = document.createElement('p');
+            subtotal.className = 'text-sm font-bold text-emerald-700 cart-subtotal';
+            subtotal.dataset.cartItemId = item.id;
+            subtotal.textContent = 'Rp ' + Number(item.subtotal).toLocaleString('id-ID');
+
+            row.append(left, subtotal);
+            list.appendChild(row);
+        });
+
+        updateSelectedCartSummary();
+    }
+
+    document.querySelectorAll('.add-to-cart-form').forEach(form => {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const button = form.querySelector('button[type="submit"]');
+            const originalText = button.textContent;
+            button.disabled = true;
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Gagal menambahkan barang.');
+                }
+
+                const countElement = document.getElementById('cartCount');
+                if (countElement) {
+                    countElement.textContent = data.cart_count;
+                }
+
+                const totalElement = document.getElementById('cartTotal');
+                if (totalElement) {
+                    totalElement.textContent = 'Rp ' +
+                        Number(data.total).toLocaleString('id-ID');
+                }
+
+                renderCartItems(data.items);
+            } catch (error) {
+                alert('Gagal menambahkan barang: ' + error.message);
+                console.error(error);
+            } finally {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
         });
     });
-    </script>
+</script>
+
 
     <script>
         // Fungsi untuk membuka/menutup kotak dropdown profil
@@ -693,22 +886,6 @@
         }
 
         // Menutup dropdown secara otomatis jika pengguna mengklik area lain di luar kotak
-        window.addEventListener('click', function() {
-            const dropdown = document.getElementById('profileDropdown');
-            if (dropdown && !dropdown.classList.contains('hidden')) {
-                dropdown.classList.add('hidden');
-            }
-        });
-    </script>
-
-    <!-- Skrip JavaScript Pendukung Dropdown -->
-    <script>
-        function toggleProfileMenu(event) {
-            event.stopPropagation();
-            const dropdown = document.getElementById('profileDropdown');
-            dropdown.classList.toggle('hidden');
-        }
-
         window.addEventListener('click', function() {
             const dropdown = document.getElementById('profileDropdown');
             if (dropdown && !dropdown.classList.contains('hidden')) {
@@ -758,6 +935,11 @@ function showRemoveCartModal(itemId) {
     pendingRemoveCartItemId = itemId;
 
     const modal = document.getElementById('removeCartModal');
+
+    if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+    }
+
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 }
@@ -823,12 +1005,31 @@ async function confirmRemoveCartItem() {
             }
         }
 
-        const total = document.getElementById('cartTotal');
 
-        if (total) {
-            total.textContent = 'Rp ' +
-                Number(data.total).toLocaleString('id-ID');
+        const remainingInputs = document.querySelectorAll(
+            '.cart-quantity[data-cart-item-id]'
+        );
+
+        const cartCount = document.getElementById('cartCount');
+
+        if (cartCount) {
+            let quantityCount = 0;
+
+            remainingInputs.forEach(input => {
+                quantityCount += parseInt(input.value, 10) || 0;
+            });
+
+            cartCount.textContent = quantityCount;
         }
+
+        if (remainingInputs.length === 0) {
+            renderCartItems([]);
+            closeRemoveCartModal();
+            return;
+        }
+
+        updateCartCheckout(Array.from(remainingInputs).filter(input => parseInt(input.value, 10) > 0));
+        updateSelectedCartSummary();
 
         closeRemoveCartModal();
 
@@ -910,14 +1111,10 @@ async function updateCartQuantity(itemId, action, element) {
         if (subtotal) {
             subtotal.textContent = 'Rp ' +
                 Number(data.subtotal).toLocaleString('id-ID');
+            subtotal.dataset.subtotal = Number(data.subtotal);
         }
 
-        const total = document.getElementById('cartTotal');
-
-        if (total) {
-            total.textContent = 'Rp ' +
-                Number(data.total).toLocaleString('id-ID');
-        }
+        updateSelectedCartSummary();
 
     } catch (error) {
         input.value = oldQuantity;
@@ -929,40 +1126,6 @@ async function updateCartQuantity(itemId, action, element) {
     }
 }
 </script>
-
-
-<!-- Popup Konfirmasi Hapus Barang -->
-<div id="removeCartModal"
-    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4">
-
-    <div class="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl">
-        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-2xl text-red-600">
-            !
-        </div>
-
-        <h3 class="mb-2 text-lg font-bold text-gray-800">
-            Hapus Barang?
-        </h3>
-
-        <p class="mb-6 text-sm text-gray-500">
-            Kamu yakin ingin menghapus barang ini dari keranjang?
-        </p>
-
-        <div class="flex gap-3">
-            <button type="button"
-                onclick="closeRemoveCartModal()"
-                class="flex-1 rounded-xl border border-gray-300 px-4 py-3 font-semibold text-gray-700 hover:bg-gray-100">
-                Batal
-            </button>
-
-            <button type="button"
-                onclick="confirmRemoveCartItem()"
-                class="flex-1 rounded-xl bg-red-600 px-4 py-3 font-semibold text-white hover:bg-red-700">
-                Ya, Hapus
-            </button>
-        </div>
-    </div>
-</div>
 
 </body>
 </html>
