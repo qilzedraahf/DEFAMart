@@ -616,7 +616,7 @@
 <div class="flex items-center gap-2 mt-1">
     <button
         type="button"
-        onclick="updateCartQuantity({{ $item->id }}, 'decrease', this)"
+        onclick="updateCartQuantity('{{ $item->id }}', 'decrease', this)"
         class="w-7 h-7 border rounded-md text-gray-700 hover:bg-gray-100">
         −
     </button>
@@ -627,11 +627,11 @@
         value="{{ $item->quantity }}"
         data-cart-item-id="{{ $item->id }}"
         class="cart-quantity w-12 h-7 border rounded-md text-center text-sm"
-        onchange="updateCartQuantity({{ $item->id }}, 'set', this)">
+        onchange="updateCartQuantity('{{ $item->id }}', 'set', this)">
 
     <button
         type="button"
-        onclick="updateCartQuantity({{ $item->id }}, 'increase', this)"
+        onclick="updateCartQuantity('{{ $item->id }}', 'increase', this)"
         class="w-7 h-7 border rounded-md text-gray-700 hover:bg-gray-100">
         +
     </button>
