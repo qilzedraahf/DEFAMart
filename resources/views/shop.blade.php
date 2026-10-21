@@ -136,159 +136,271 @@
                 <!-- Kontainer Geser (Horizontal Scroll) -->
                 <div id="promoSlider" class="flex space-x-4 overflow-x-auto scroll-smooth pb-3 no-scrollbar" style="scrollbar-width: none; -ms-overflow-style: none;">
                     
-                    <!-- Banner 1: Voucher & Potongan Harga -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-red-600 via-red-500 to-amber-600 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Voucher Spesial</span>
-                                <h2 class="text-2xl md:text-3xl font-extrabold mt-2 tracking-wide">POTONGAN HINGGA <span class="text-yellow-300">15K</span> MENANTI!</h2>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 1 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-black/20 px-3 py-1.5 rounded-lg font-medium">Voucher tersedia untuk member</span>
-                            <a href="#" onclick="event.preventDefault()" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                KLIK DI SINI
-                            </a>
-                        </div>
-                    </div>
+                <!-- PEMBUNGKUS UTAMA PROMO -->
+<section class="w-full flex flex-col">
 
-                    <!-- Banner 2: Mega Sale Diskon 50% -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Mega Sale</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">LOWEST PRICE EVER!</h2>
-                                <p class="text-lg font-bold text-yellow-300">Diskon Spesial hingga 50%</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 2 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-purple-900/40 px-3 py-1.5 rounded-lg font-medium text-purple-100">Periode 20–25 September</span>
-                            <a href="#" onclick="event.preventDefault()" class="bg-amber-300 hover:bg-amber-400 text-purple-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                AMBIL PROMO
-                            </a>
-                        </div>
-                    </div>
+    <!-- AREA SLIDER -->
+    <div class="w-full overflow-hidden">
 
-                    <!-- Banner 3: Gratis Ongkir Sepuasnya -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Gratis Ongkir</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">BEBAS ONGKIR SEPUASNYA!</h2>
-                                <p class="text-xs md:text-sm text-teal-100 mt-1">Belanja kebutuhan harian tanpa batas biaya kirim.</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 3 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-teal-900/40 px-3 py-1.5 rounded-lg font-medium text-teal-100">Tanpa Minimum Belanja</span>
-                            <a href="#" onclick="event.preventDefault()" class="bg-emerald-300 hover:bg-emerald-400 text-teal-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                CEK VOUCHER
-                            </a>
-                        </div>
-                    </div>
+        <div id="promoSlider"
+             class="flex gap-4 overflow-x-auto scroll-smooth scrollbar-hide w-full">
 
-                    <!-- Banner 4: Flash Sale Kilat -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">⚡ Flash Sale</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">DISKON KILAT HARI INI</h2>
-                                <p class="text-xs md:text-sm text-orange-100 mt-1">Sikat produk pilihan sebelum kehabisan!</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 4 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-orange-950/40 px-3 py-1.5 rounded-lg font-medium text-orange-100">Berakhir Pukul 23:59</span>
-                            <a href="#" onclick="event.preventDefault()" class="bg-white hover:bg-orange-50 text-orange-700 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                BELI SEKARANG
-                            </a>
-                        </div>
-                    </div>
+            <!-- Banner 1 sampai Banner 7 -->
+             
+            
+<!-- Banner 1: Voucher & Potongan Harga -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-red-600 via-red-500 to-amber-600 text-white rounded-2xl p-6 shadow-md flex flex-col justify-between min-h-[270px]">
 
-                    <!-- Banner 5: Cashback Spesial Member -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-blue-700 via-indigo-600 to-violet-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">A-Point & Cashback</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">CASHBACK HINGGA 30%</h2>
-                                <p class="text-xs md:text-sm text-blue-100 mt-1">Kumpulkan poin ekstra dari setiap transaksi harianmu.</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 5 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-blue-950/40 px-3 py-1.5 rounded-lg font-medium text-blue-100">Khusus Member DEFAMart</span>
-                            <a href="#" onclick="event.preventDefault()" class="bg-cyan-300 hover:bg-cyan-400 text-blue-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                KUMPULKAN POIN
-                            </a>
-                        </div>
-                    </div>
+    <div class="relative z-10">
+        <span class="inline-block bg-white/20 text-xs px-3 py-1.5 rounded-full font-semibold">
+            Voucher Spesial
+        </span>
 
-                    <!-- Banner 6: Kebutuhan Rumah Tangga Murah -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-pink-700 via-rose-600 to-red-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Rumah Tangga</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">GROSIR SEMBAKO HEMAT</h2>
-                                <p class="text-xs md:text-sm text-pink-100 mt-1">Belanja kebutuhan bulanan jadi makin hemat dan praktis.</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 6 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-rose-950/40 px-3 py-1.5 rounded-lg font-medium text-rose-100">100% Dijamin Original</span>
-                            <a href="#" class="bg-yellow-300 hover:bg-yellow-400 text-rose-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                LIHAT KATALOG
-                            </a>
-                        </div>
-                    </div>
+        <h2 class="text-2xl md:text-3xl font-extrabold mt-3 tracking-wide">
+            POTONGAN HINGGA
+            <span class="text-yellow-300">15K</span>
+            MENANTI!
+        </h2>
+    </div>
 
-                    <!-- Banner 7: Produk Perawatan & Kecantikan -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-teal-800 via-emerald-700 to-green-800 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Beauty & Care</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">GLOW UP SETIAP HARI</h2>
-                                <p class="text-xs md:text-sm text-emerald-100 mt-1">Temukan produk perawatan tubuh terbaik impianmu.</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 7 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-emerald-950/40 px-3 py-1.5 rounded-lg font-medium text-emerald-100">Diskon Brand Pilihan</span>
-                            <a href="#" class="bg-lime-300 hover:bg-lime-400 text-emerald-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                JELAJAHI SEKARANG
-                            </a>
-                        </div>
-                    </div>
+    <div class="relative z-10 flex flex-col gap-4 mt-6">
+        <span class="text-xs bg-black/20 px-3 py-2 rounded-lg font-medium w-fit">
+            Voucher tersedia untuk member
+        </span>
 
-                </div>
+        <div class="flex flex-wrap items-center gap-3">
+            <form method="POST" action="{{ route('vouchers.claim', 'voucher-spesial') }}">
+                @csrf
 
-                
-                <!-- Navigasi Slider & Indikator (Diatur Sejajar Rata Kiri-Kanan) -->
-                <div class="flex items-center justify-between mt-4 px-2 w-full">
+                <button
+                    type="submit"
+                    {{ session()->has('claimed_vouchers.voucher-spesial') ? 'disabled' : '' }}
+                    class="bg-yellow-400 text-black font-bold text-sm px-4 py-3 rounded-xl hover:bg-yellow-300 disabled:opacity-90 transition">
+                    {{ session()->has('claimed_vouchers.voucher-spesial') ? '✓ SUDAH DIKLAIM' : 'KLIK DI SINI' }}
+                </button>
+            </form>
+
+            <a href="{{ route('vouchers.show', 'voucher-spesial') }}"
+               class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-xs md:text-sm px-4 py-3 rounded-xl hover:bg-white/15 transition">
+                SYARAT & KETENTUAN
+            </a>
+        </div>
+    </div>
+
+</div>
+
                     
-                    <!-- Tombol Geser Kiri (Sebelumnya) di sebelah kiri -->
-                    <button onclick="scrollSlider(-400)" class="text-xs font-semibold text-gray-500 hover:text-[#134e32] transition flex items-center space-x-1">
-                        <span>&lt; Lihat Promo Sebelumnya</span>
-                    </button>
+<!-- Banner 2: Mega Sale Diskon 50% -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-700 text-white rounded-2xl p-6 shadow-md flex flex-col justify-between min-h-[270px]">
 
-                    <!-- Indikator Titik (Dots) di Tengah -->
-                    <div class="flex items-center space-x-1.5">
-                        <span class="dot w-3 h-3 bg-red-600 rounded-full transition-all duration-300" data-index="0"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="1"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="2"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="3"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="4"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="5"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="6"></span>
-                    </div>
+    <div class="relative z-10">
+        <span class="inline-block bg-white/20 text-xs px-3 py-1.5 rounded-full font-semibold">
+            Mega Sale
+        </span>
 
-                    <!-- Tombol Geser Kanan (Selanjutnya) di sebelah kanan -->
-                    <button onclick="scrollSlider(400)" class="text-xs font-semibold text-gray-500 hover:text-[#134e32] transition flex items-center space-x-1">
-                        <span>Lihat Promo Selanjutnya &gt;</span>
-                    </button>
+        <h2 class="text-2xl md:text-3xl font-extrabold mt-3">
+            LOWEST PRICE EVER!
+        </h2>
+
+        <p class="text-lg md:text-xl font-bold text-yellow-300 mt-1">
+            Diskon Spesial hingga 50%
+        </p>
+    </div>
+
+    <div class="relative z-10 flex flex-col gap-4 mt-6">
+        <span class="text-xs bg-black/20 px-3 py-2 rounded-lg font-medium w-fit">
+            Periode 20–25 September
+        </span>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <form method="POST" action="{{ route('vouchers.claim', 'mega-sale') }}">
+                @csrf
+
+                <button
+                    type="submit"
+                    {{ session()->has('claimed_vouchers.mega-sale') ? 'disabled' : '' }}
+                    class="bg-yellow-400 text-purple-900 font-bold text-sm px-4 py-3 rounded-xl hover:bg-yellow-300 disabled:opacity-90 transition">
+                    {{ session()->has('claimed_vouchers.mega-sale') ? '✓ SUDAH DIKLAIM' : 'AMBIL PROMO' }}
+                </button>
+            </form>
+
+            <a href="{{ route('vouchers.show', 'mega-sale') }}"
+               class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-xs md:text-sm px-4 py-3 rounded-xl hover:bg-white/15 transition">
+                SYARAT & KETENTUAN
+            </a>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Banner 3: Gratis Ongkir Sepuasnya -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
+    <div>
+        <span class="inline-block bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Gratis Ongkir</span>
+        <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">BEBAS ONGKIR SEPUASNYA!</h2>
+        <p class="text-xs md:text-sm text-teal-100 mt-1">Belanja kebutuhan harian tanpa batas biaya kirim.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4">
+        <span class="text-xs bg-teal-900/40 px-3 py-2 rounded-lg font-medium">Tanpa Minimum Belanja</span>
+        <form method="POST" action="{{ route('vouchers.claim', 'gratis-ongkir') }}">
+            @csrf
+            <button type="submit"
+                class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-3 rounded-xl whitespace-nowrap transition">
+                KLAIM VOUCHER
+            </button>
+        </form>
+        <a href="{{ route('vouchers.show', 'gratis-ongkir') }}"
+   class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-sm px-5 py-3 rounded-xl whitespace-nowrap hover:bg-white/15 transition">
+    SYARAT & KETENTUAN
+</a>
+    </div>
+</div>
+
+<!-- Banner 4: Flash Sale Kilat -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
+    <div>
+        <span class="inline-block bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Flash Sale</span>
+        <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">DISKON KILAT HARI INI!</h2>
+        <p class="text-xs md:text-sm text-orange-100 mt-1">Sikat produk pilihan sebelum kehabisan!</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4">
+        <span class="text-xs bg-orange-950/40 px-3 py-2 rounded-lg font-medium">Berakhir Pukul 23:59</span>
+        <form method="POST" action="{{ route('vouchers.claim', 'flash-sale') }}">
+            @csrf
+            <button type="submit"
+                class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-3 rounded-xl whitespace-nowrap transition">
+                KLAIM VOUCHER
+            </button>
+        </form>
+        <a href="{{ route('vouchers.show', 'flash-sale') }}"
+   class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-sm px-5 py-3 rounded-xl whitespace-nowrap hover:bg-white/15 transition">
+    SYARAT & KETENTUAN
+</a>
+    </div>
+</div>
+
+<!-- Banner 5: Cashback Spesial Member -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-blue-700 via-indigo-600 to-violet-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
+    <div>
+        <span class="inline-block bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Cashback & Poin</span>
+        <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">CASHBACK HINGGA 30%</h2>
+        <p class="text-xs md:text-sm text-blue-100 mt-1">Kumpulkan poin ekstra dari setiap transaksi harianmu.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4">
+        <span class="text-xs bg-blue-950/40 px-3 py-2 rounded-lg font-medium">Khusus Member DEFAMart</span>
+        <form method="POST" action="{{ route('vouchers.claim', 'cashback-member') }}">
+            @csrf
+            <button type="submit"
+                class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-3 rounded-xl whitespace-nowrap transition">
+                KLAIM VOUCHER
+            </button>
+        </form>
+        <a href="{{ route('vouchers.show', 'cashback-member') }}"
+   class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-sm px-5 py-3 rounded-xl whitespace-nowrap hover:bg-white/15 transition">
+    SYARAT & KETENTUAN
+</a>
+    </div>
+</div>
+
+<!-- Banner 6: Kebutuhan Rumah Tangga Murah -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-pink-700 via-rose-600 to-red-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
+    <div>
+        <span class="inline-block bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Rumah Tangga</span>
+        <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">GROSIR SEMBAKO HEMAT</h2>
+        <p class="text-xs md:text-sm text-pink-100 mt-1">Belanja kebutuhan bulanan jadi makin hemat dan praktis.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4">
+        <span class="text-xs bg-rose-950/40 px-3 py-2 rounded-lg font-medium">Kebutuhan Sehari-hari</span>
+        <form method="POST" action="{{ route('vouchers.claim', 'rumah-tangga') }}">
+            @csrf
+            <button type="submit"
+                class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-3 rounded-xl whitespace-nowrap transition">
+                KLAIM VOUCHER
+            </button>
+        </form>
+        <a href="{{ route('vouchers.show', 'rumah-tangga') }}"
+   class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-sm px-5 py-3 rounded-xl whitespace-nowrap hover:bg-white/15 transition">
+    SYARAT & KETENTUAN
+</a>
+    </div>
+</div>
+
+<!-- Banner 7: Produk Perawatan & Kecantikan -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-teal-800 via-emerald-700 to-green-800 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
+    <div>
+        <span class="inline-block bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Beauty & Care</span>
+        <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">GLOW UP SETIAP HARI!</h2>
+        <p class="text-xs md:text-sm text-emerald-100 mt-1">Temukan produk perawatan tubuh terbaik untukmu.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4">
+        <span class="text-xs bg-emerald-950/40 px-3 py-2 rounded-lg font-medium">Perawatan & Kecantikan</span>
+        <form method="POST" action="{{ route('vouchers.claim', 'beauty-care') }}">
+            @csrf
+            <button type="submit"
+                class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-3 rounded-xl whitespace-nowrap transition">
+                KLAIM VOUCHER
+            </button>
+        </form>
+        <a href="{{ route('vouchers.show', 'beauty-care') }}"
+   class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-sm px-5 py-3 rounded-xl whitespace-nowrap hover:bg-white/15 transition">
+    SYARAT & KETENTUAN
+</a>
+    </div>
+</div>
 
                 </div>
+        <!-- PENUTUP promoSlider -->
+
+    </div>
+    <!-- PENUTUP AREA SLIDER -->  
+                
+
+
+<!-- NAVIGASI PROMO -->
+<div class="w-full mt-6 px-4">
+
+    <div class="flex flex-wrap items-center justify-between gap-4 w-full">
+
+        <!-- SEBELUMNYA -->
+        <button
+            type="button"
+            onclick="scrollSlider(-1)"
+            class="flex-shrink-0 text-sm font-semibold text-gray-500 hover:text-green-800 cursor-pointer transition"
+        >
+            &rarr; Lihat Promo Sebelumnya
+        </button>
+
+        <!-- INDIKATOR -->
+        <div class="flex items-center justify-center gap-2">
+
+            @for ($i = 0; $i < 7; $i++)
+                <span
+                    class="dot w-2.5 h-2.5 rounded-full bg-gray-300 transition-all duration-300"
+                    data-index="{{ $i }}">
+                </span>
+            @endfor
+
+        </div>
+
+        <!-- SELANJUTNYA -->
+        <button
+            type="button"
+            onclick="scrollSlider(1)"
+            class="flex-shrink-0 text-sm font-semibold text-gray-500 hover:text-green-800 cursor-pointer transition"
+        >
+            Lihat Promo Selanjutnya &rarr;
+        </button>
+
+    </div>
+
+</div>
+<!-- AKHIR NAVIGASI -->
+
+
+    </div>
+</div>
+
             </div>
 
         <!-- BAGIAN KATEGORI PILIHAN -->
@@ -895,36 +1007,66 @@
     </script>
 
     <script>
-        function scrollSlider(direction) {
-            const slider = document.getElementById('promoSlider');
-            slider.scrollBy({ left: direction, behavior: 'smooth' });
-        }
+        
 
-        // Memantau posisi scroll untuk mengubah indikator titik secara otomatis
-        const slider = document.getElementById('promoSlider');
-        const dots = document.querySelectorAll('.dot');
+window.scrollSlider = function(direction) {
+    const slider = document.getElementById('promoSlider');
 
-        if (slider) {
-            slider.addEventListener('scroll', function() {
-                // Menghitung indeks banner yang sedang aktif berdasarkan posisi scroll
-                let index = Math.round(slider.scrollLeft / (slider.offsetWidth / 2));
-                
-                // Batasi indeks agar sesuai dengan jumlah banner (0 sampai 6)
-                if (index > 6) index = 6;
-                if (index < 0) index = 0;
+    if (!slider) {
+        alert('Slider tidak ditemukan!');
+        return;
+    }
 
-                // Perbarui tampilan setiap titik
-                dots.forEach((dot, i) => {
-                    if (i === index) {
-                        dot.classList.remove('w-2', 'h-2', 'bg-gray-300');
-                        dot.classList.add('w-3', 'h-3', 'bg-red-600');
-                    } else {
-                        dot.classList.remove('w-3', 'h-3', 'bg-red-600');
-                        dot.classList.add('w-2', 'h-2', 'bg-gray-300');
-                    }
-                });
-            });
-        }
+    const banner = slider.firstElementChild;
+
+    if (!banner) {
+        alert('Banner tidak ditemukan!');
+        return;
+    }
+
+    const gap = parseFloat(getComputedStyle(slider).gap) || 16;
+
+    const jarak = banner.getBoundingClientRect().width + gap;
+
+    slider.scrollBy({
+        left: direction * jarak,
+        behavior: 'smooth'
+    });
+};
+
+
+// INDIKATOR TITIK PROMO
+const promoSlider = document.getElementById('promoSlider');
+const dots = document.querySelectorAll('.dot');
+
+if (promoSlider) {
+
+    function updateDots() {
+        const banner = promoSlider.firstElementChild;
+        if (!banner) return;
+
+        const gap = parseFloat(getComputedStyle(promoSlider).gap) || 16;
+        const bannerWidth = banner.getBoundingClientRect().width + gap;
+
+        let index = Math.round(promoSlider.scrollLeft / bannerWidth);
+
+        index = Math.max(0, Math.min(index, dots.length - 1));
+
+        dots.forEach((dot, i) => {
+            if (i === index) {
+                dot.classList.remove('w-2', 'h-2', 'bg-gray-300');
+                dot.classList.add('w-3', 'h-3', 'bg-red-600');
+            } else {
+                dot.classList.remove('w-3', 'h-3', 'bg-red-600');
+                dot.classList.add('w-2', 'h-2', 'bg-gray-300');
+            }
+        });
+    }
+
+    promoSlider.addEventListener('scroll', updateDots);
+    updateDots();
+}
+
     </script>
 
 
