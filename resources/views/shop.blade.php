@@ -351,6 +351,96 @@
                 </div>
             </div>
 
+        <!-- BAGIAN KATEGORI PILIHAN -->
+            <section class="max-w-7xl mx-auto px-4 my-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-800 flex items-center space-x-2">
+                        <span class="w-1.5 h-5 bg-[#134e32] rounded-full inline-block"></span>
+                        <span>Kategori Pilihan</span>
+                    </h3>
+                </div>
+
+                <!-- Grid Kategori Utama (Total 7 Kolom: 1 Menu Semua Produk + 6 Kategori) -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-4">
+                    
+                    <!-- 1. Tombol Manual: Semua Produk (Tanpa ID / Mengarah ke semua produk) -->
+                <a href="{{ route('shop.index') }}" class="bg-white hover:shadow-md border border-gray-100 rounded-2xl p-4 flex flex-col items-center text-center transition group">
+                    <div class="w-14 h-14 bg-emerald-50 text-[#134e32] rounded-2xl flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition duration-300">
+                        📦
+                    </div>
+                    <h4 class="text-xs font-bold text-gray-800 group-hover:text-[#134e32] transition">Semua Produk</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Tampilkan Semua</p>
+                </a>
+
+                <!-- 2. Kategori 1 (Sembako & Dapur) - Mengambil data berdasarkan index ke-0 atau slug spesifik -->
+                @if(isset($categories[0]))
+                <a href="{{ route('shop.index', ['category' => $categories[0]->slug]) }}" class="bg-white hover:shadow-md border border-gray-100 rounded-2xl p-4 flex flex-col items-center text-center transition group">
+                    <div class="w-14 h-14 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition duration-300">
+                        🍚
+                    </div>
+                    <h4 class="text-xs font-bold text-gray-800 group-hover:text-red-600 transition">{{ $categories[0]->name }}</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Beras, Minyak, Gula</p>
+                </a>
+                @endif
+
+                <!-- 3. Kategori 2 (Susu, Bayi & Anak) -->
+                @if(isset($categories[1]))
+                <a href="{{ route('shop.index', ['category' => $categories[1]->slug]) }}" class="bg-white hover:shadow-md border border-gray-100 rounded-2xl p-4 flex flex-col items-center text-center transition group">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition duration-300">
+                        🍼
+                    </div>
+                    <h4 class="text-xs font-bold text-gray-800 group-hover:text-blue-600 transition">{{ $categories[1]->name }}</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Susu, Popok, Perlengkapan</p>
+                </a>
+                @endif
+
+                <!-- 4. Kategori 3 (Makanan Ringan & Minuman) -->
+                @if(isset($categories[2]))
+                <a href="{{ route('shop.index', ['category' => $categories[2]->slug]) }}" class="bg-white hover:shadow-md border border-gray-100 rounded-2xl p-4 flex flex-col items-center text-center transition group">
+                    <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition duration-300">
+                        🍿
+                    </div>
+                    <h4 class="text-xs font-bold text-gray-800 group-hover:text-amber-600 transition">{{ $categories[2]->name }}</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Snack, Biskuit, Kopi</p>
+                </a>
+                @endif
+
+                <!-- 5. Kategori 4 (Perawatan Tubuh & Kecantikan) -->
+                @if(isset($categories[3]))
+                <a href="{{ route('shop.index', ['category' => $categories[3]->slug]) }}" class="bg-white hover:shadow-md border border-gray-100 rounded-2xl p-4 flex flex-col items-center text-center transition group">
+                    <div class="w-14 h-14 bg-pink-50 text-pink-600 rounded-2xl flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition duration-300">
+                        🧴
+                    </div>
+                    <h4 class="text-xs font-bold text-gray-800 group-hover:text-pink-600 transition">{{ $categories[3]->name }}</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Sabun, Shampoo, Skincare</p>
+                </a>
+                @endif
+
+                <!-- 6. Kategori 5 (Kebersihan Rumah Tangga) -->
+                @if(isset($categories[4]))
+                <a href="{{ route('shop.index', ['category' => $categories[4]->slug]) }}" class="bg-white hover:shadow-md border border-gray-100 rounded-2xl p-4 flex flex-col items-center text-center transition group">
+                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition duration-300">
+                        🧹
+                    </div>
+                    <h4 class="text-xs font-bold text-gray-800 group-hover:text-emerald-600 transition">{{ $categories[4]->name }}</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Deterjen, Pembersih, Tisu</p>
+                </a>
+                @endif
+
+                <!-- 7. Kategori 6 (Produk Segar & Beku) -->
+                @if(isset($categories[5]))
+                <a href="{{ route('shop.index', ['category' => $categories[5]->slug]) }}" class="bg-white hover:shadow-md border border-gray-100 rounded-2xl p-4 flex flex-col items-center text-center transition group">
+                    <div class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition duration-300">
+                        🥩
+                    </div>
+                    <h4 class="text-xs font-bold text-gray-800 group-hover:text-purple-600 transition">{{ $categories[5]->name }}</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Buah, Sayur, Frozen Food</p>
+                </a>
+                @endif
+
+                </div>
+            </section>
+
             <!-- Daftar Katalog Produk -->
             <section class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 min-h-[300px]">
                 <div class="flex items-center space-x-2 border-b pb-4 mb-6">
