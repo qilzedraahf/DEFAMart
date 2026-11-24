@@ -53,9 +53,11 @@
                 <div>
                     <button type="button" onclick="toggleCart(event)" class="bg-[#0f3e28] hover:bg-[#0b2f1f] text-white px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2 border border-emerald-700 shadow transition">
                         <span>🛒 Keranjang</span>
-                        <span class="bg-yellow-400 text-gray-900 font-bold px-2 py-0.5 rounded-full text-xs">
-                            {{ isset($cartCount) ? $cartCount : 0 }}
-                        </span>
+                       
+<span id="cartCount" class="bg-yellow-400 text-gray-900 font-bold px-2 py-0.5 rounded-full text-xs">
+    {{ isset($cartCount) ? $cartCount : 0 }}
+</span>
+
                     </button>
                 </div>
 
@@ -121,70 +123,8 @@
 
             </div>
 
-            <!-- Panel Samping Keranjang Belanja (Tampilan Saja) -->
-            <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
-                
-                <div>
-                    <div class="flex items-center justify-between p-5 border-b border-gray-200">
-                        <h2 class="text-lg font-bold text-gray-800">Keranjang Belanja Anda</h2>
-                        <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-xl font-bold px-2 cursor-pointer">&times;</button>
-                    </div>
+         
 
-                    <div class="p-5 overflow-y-auto max-h-[calc(100vh-220px)] space-y-4">
-                        @php
-                            $userId = Auth::id() ?? 1;
-                            $userCart = \App\Models\Cart::with('items.product')->where('user_id', $userId)->first();
-                            $totalPrice = 0;
-                        @endphp
-
-                        @if(!$userCart || $userCart->items->isEmpty())
-                            <div class="flex flex-col items-center justify-center py-20 text-gray-400 text-center">
-                                <p class="text-sm">Keranjang Anda masih kosong.</p>
-                            </div>
-                        @else
-                            @foreach($userCart->items as $item)
-                                @php 
-                                    $subtotal = $item->product->price * $item->quantity;
-                                    $totalPrice += $subtotal;
-                                @endphp
-                                <div class="flex items-center justify-between border-b pb-3">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-14 h-14 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
-                                            <img src="{{ asset('images/default.jpg') }}" alt="Default Produk" class="w-full h-full object-cover">
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-semibold text-gray-800 line-clamp-1">{{ $item->product->name }}</h4>
-                                            <p class="text-xs text-gray-500 mt-1">
-                                                {{ $item->quantity }} x Rp {{ number_format($item->product->price, 0, ',', '.') }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <p class="text-sm font-bold text-[#134e32]">
-                                        Rp {{ number_format($subtotal, 0, ',', '.') }}
-                                    </p>
-                                </div>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Bagian Bawah: Total Harga & Tombol Checkout -->
-                <div class="p-5 border-t border-gray-200 bg-gray-50">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-base font-semibold text-gray-700">Total Harga:</span>
-                        <span class="text-xl font-extrabold text-[#134e32]">Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}</span>
-                    </div>
-                    
-                    <form action="{{ route('order.checkout') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="shipping_address" value="Alamat Default Uji Coba">
-                        <button type="submit" class="w-full bg-[#134e32] hover:bg-[#0f3e28] text-white font-bold py-3 rounded-xl shadow transition text-center cursor-pointer">
-                            Lanjut ke Pembayaran
-                        </button>
-                    </form>
-                </div>
-
-            </div>
         </header>
 
         <!-- Konten Utama -->
@@ -196,159 +136,271 @@
                 <!-- Kontainer Geser (Horizontal Scroll) -->
                 <div id="promoSlider" class="flex space-x-4 overflow-x-auto scroll-smooth pb-3 no-scrollbar" style="scrollbar-width: none; -ms-overflow-style: none;">
                     
-                    <!-- Banner 1: Voucher & Potongan Harga -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-red-600 via-red-500 to-amber-600 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Voucher Spesial</span>
-                                <h2 class="text-2xl md:text-3xl font-extrabold mt-2 tracking-wide">POTONGAN HINGGA <span class="text-yellow-300">15K</span> MENANTI!</h2>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 1 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-black/20 px-3 py-1.5 rounded-lg font-medium">Voucher tersedia untuk member</span>
-                            <a href="#" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                KLIK DI SINI
-                            </a>
-                        </div>
-                    </div>
+                <!-- PEMBUNGKUS UTAMA PROMO -->
+<section class="w-full flex flex-col">
 
-                    <!-- Banner 2: Mega Sale Diskon 50% -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Mega Sale</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">LOWEST PRICE EVER!</h2>
-                                <p class="text-lg font-bold text-yellow-300">Diskon Spesial hingga 50%</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 2 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-purple-900/40 px-3 py-1.5 rounded-lg font-medium text-purple-100">Periode 20–25 September</span>
-                            <a href="#" class="bg-amber-300 hover:bg-amber-400 text-purple-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                AMBIL PROMO
-                            </a>
-                        </div>
-                    </div>
+    <!-- AREA SLIDER -->
+    <div class="w-full overflow-hidden">
 
-                    <!-- Banner 3: Gratis Ongkir Sepuasnya -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Gratis Ongkir</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">BEBAS ONGKIR SEPUASNYA!</h2>
-                                <p class="text-xs md:text-sm text-teal-100 mt-1">Belanja kebutuhan harian tanpa batas biaya kirim.</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 3 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-teal-900/40 px-3 py-1.5 rounded-lg font-medium text-teal-100">Tanpa Minimum Belanja</span>
-                            <a href="#" class="bg-emerald-300 hover:bg-emerald-400 text-teal-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                CEK VOUCHER
-                            </a>
-                        </div>
-                    </div>
+        <div id="promoSlider"
+             class="flex gap-4 overflow-x-auto scroll-smooth scrollbar-hide w-full">
 
-                    <!-- Banner 4: Flash Sale Kilat -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">⚡ Flash Sale</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">DISKON KILAT HARI INI</h2>
-                                <p class="text-xs md:text-sm text-orange-100 mt-1">Sikat produk pilihan sebelum kehabisan!</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 4 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-orange-950/40 px-3 py-1.5 rounded-lg font-medium text-orange-100">Berakhir Pukul 23:59</span>
-                            <a href="#" class="bg-white hover:bg-orange-50 text-orange-700 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                BELI SEKARANG
-                            </a>
-                        </div>
-                    </div>
+            <!-- Banner 1 sampai Banner 7 -->
+             
+            
+<!-- Banner 1: Voucher & Potongan Harga -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-red-600 via-red-500 to-amber-600 text-white rounded-2xl p-6 shadow-md flex flex-col justify-between min-h-[270px]">
 
-                    <!-- Banner 5: Cashback Spesial Member -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-blue-700 via-indigo-600 to-violet-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">A-Point & Cashback</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">CASHBACK HINGGA 30%</h2>
-                                <p class="text-xs md:text-sm text-blue-100 mt-1">Kumpulkan poin ekstra dari setiap transaksi harianmu.</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 5 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-blue-950/40 px-3 py-1.5 rounded-lg font-medium text-blue-100">Khusus Member DEFAMart</span>
-                            <a href="#" class="bg-cyan-300 hover:bg-cyan-400 text-blue-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                KUMPULKAN POIN
-                            </a>
-                        </div>
-                    </div>
+    <div class="relative z-10">
+        <span class="inline-block bg-white/20 text-xs px-3 py-1.5 rounded-full font-semibold">
+            Voucher Spesial
+        </span>
 
-                    <!-- Banner 6: Kebutuhan Rumah Tangga Murah -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-pink-700 via-rose-600 to-red-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Rumah Tangga</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">GROSIR SEMBAKO HEMAT</h2>
-                                <p class="text-xs md:text-sm text-pink-100 mt-1">Belanja kebutuhan bulanan jadi makin hemat dan praktis.</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 6 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-rose-950/40 px-3 py-1.5 rounded-lg font-medium text-rose-100">100% Dijamin Original</span>
-                            <a href="#" class="bg-yellow-300 hover:bg-yellow-400 text-rose-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                LIHAT KATALOG
-                            </a>
-                        </div>
-                    </div>
+        <h2 class="text-2xl md:text-3xl font-extrabold mt-3 tracking-wide">
+            POTONGAN HINGGA
+            <span class="text-yellow-300">15K</span>
+            MENANTI!
+        </h2>
+    </div>
 
-                    <!-- Banner 7: Produk Perawatan & Kecantikan -->
-                    <div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-teal-800 via-emerald-700 to-green-800 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
-                        <div class="flex justify-between items-start z-10">
-                            <div>
-                                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Beauty & Care</span>
-                                <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">GLOW UP SETIAP HARI</h2>
-                                <p class="text-xs md:text-sm text-emerald-100 mt-1">Temukan produk perawatan tubuh terbaik impianmu.</p>
-                            </div>
-                        </div>
-                        <!-- Bagian Bawah Banner 7 -->
-                        <div class="flex justify-between items-end z-10 mt-4">
-                            <span class="text-xs bg-emerald-950/40 px-3 py-1.5 rounded-lg font-medium text-emerald-100">Diskon Brand Pilihan</span>
-                            <a href="#" class="bg-lime-300 hover:bg-lime-400 text-emerald-950 font-bold px-4 py-2 rounded-xl text-xs shadow transition">
-                                JELAJAHI SEKARANG
-                            </a>
-                        </div>
-                    </div>
+    <div class="relative z-10 flex flex-col gap-4 mt-6">
+        <span class="text-xs bg-black/20 px-3 py-2 rounded-lg font-medium w-fit">
+            Voucher tersedia untuk member
+        </span>
 
-                </div>
+        <div class="flex flex-wrap items-center gap-3">
+            <form method="POST" action="{{ route('vouchers.claim', 'voucher-spesial') }}">
+                @csrf
 
-                
-                <!-- Navigasi Slider & Indikator (Diatur Sejajar Rata Kiri-Kanan) -->
-                <div class="flex items-center justify-between mt-4 px-2 w-full">
+                <button
+                    type="submit"
+                    {{ session()->has('claimed_vouchers.voucher-spesial') ? 'disabled' : '' }}
+                    class="bg-yellow-400 text-black font-bold text-sm px-4 py-3 rounded-xl hover:bg-yellow-300 disabled:opacity-90 transition">
+                    {{ session()->has('claimed_vouchers.voucher-spesial') ? '✓ SUDAH DIKLAIM' : 'KLIK DI SINI' }}
+                </button>
+            </form>
+
+            <a href="{{ route('vouchers.show', 'voucher-spesial') }}"
+               class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-xs md:text-sm px-4 py-3 rounded-xl hover:bg-white/15 transition">
+                SYARAT & KETENTUAN
+            </a>
+        </div>
+    </div>
+
+</div>
+
                     
-                    <!-- Tombol Geser Kiri (Sebelumnya) di sebelah kiri -->
-                    <button onclick="scrollSlider(-400)" class="text-xs font-semibold text-gray-500 hover:text-[#134e32] transition flex items-center space-x-1">
-                        <span>&lt; Lihat Promo Sebelumnya</span>
-                    </button>
+<!-- Banner 2: Mega Sale Diskon 50% -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-700 text-white rounded-2xl p-6 shadow-md flex flex-col justify-between min-h-[270px]">
 
-                    <!-- Indikator Titik (Dots) di Tengah -->
-                    <div class="flex items-center space-x-1.5">
-                        <span class="dot w-3 h-3 bg-red-600 rounded-full transition-all duration-300" data-index="0"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="1"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="2"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="3"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="4"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="5"></span>
-                        <span class="dot w-2 h-2 bg-gray-300 rounded-full transition-all duration-300" data-index="6"></span>
-                    </div>
+    <div class="relative z-10">
+        <span class="inline-block bg-white/20 text-xs px-3 py-1.5 rounded-full font-semibold">
+            Mega Sale
+        </span>
 
-                    <!-- Tombol Geser Kanan (Selanjutnya) di sebelah kanan -->
-                    <button onclick="scrollSlider(400)" class="text-xs font-semibold text-gray-500 hover:text-[#134e32] transition flex items-center space-x-1">
-                        <span>Lihat Promo Selanjutnya &gt;</span>
-                    </button>
+        <h2 class="text-2xl md:text-3xl font-extrabold mt-3">
+            LOWEST PRICE EVER!
+        </h2>
+
+        <p class="text-lg md:text-xl font-bold text-yellow-300 mt-1">
+            Diskon Spesial hingga 50%
+        </p>
+    </div>
+
+    <div class="relative z-10 flex flex-col gap-4 mt-6">
+        <span class="text-xs bg-black/20 px-3 py-2 rounded-lg font-medium w-fit">
+            Periode 20–25 September
+        </span>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <form method="POST" action="{{ route('vouchers.claim', 'mega-sale') }}">
+                @csrf
+
+                <button
+                    type="submit"
+                    {{ session()->has('claimed_vouchers.mega-sale') ? 'disabled' : '' }}
+                    class="bg-yellow-400 text-purple-900 font-bold text-sm px-4 py-3 rounded-xl hover:bg-yellow-300 disabled:opacity-90 transition">
+                    {{ session()->has('claimed_vouchers.mega-sale') ? '✓ SUDAH DIKLAIM' : 'AMBIL PROMO' }}
+                </button>
+            </form>
+
+            <a href="{{ route('vouchers.show', 'mega-sale') }}"
+               class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-xs md:text-sm px-4 py-3 rounded-xl hover:bg-white/15 transition">
+                SYARAT & KETENTUAN
+            </a>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Banner 3: Gratis Ongkir Sepuasnya -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
+    <div>
+        <span class="inline-block bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Gratis Ongkir</span>
+        <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">BEBAS ONGKIR SEPUASNYA!</h2>
+        <p class="text-xs md:text-sm text-teal-100 mt-1">Belanja kebutuhan harian tanpa batas biaya kirim.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4">
+        <span class="text-xs bg-teal-900/40 px-3 py-2 rounded-lg font-medium">Tanpa Minimum Belanja</span>
+        <form method="POST" action="{{ route('vouchers.claim', 'gratis-ongkir') }}">
+            @csrf
+            <button type="submit"
+                class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-3 rounded-xl whitespace-nowrap transition">
+                KLAIM VOUCHER
+            </button>
+        </form>
+        <a href="{{ route('vouchers.show', 'gratis-ongkir') }}"
+   class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-sm px-5 py-3 rounded-xl whitespace-nowrap hover:bg-white/15 transition">
+    SYARAT & KETENTUAN
+</a>
+    </div>
+</div>
+
+<!-- Banner 4: Flash Sale Kilat -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
+    <div>
+        <span class="inline-block bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Flash Sale</span>
+        <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">DISKON KILAT HARI INI!</h2>
+        <p class="text-xs md:text-sm text-orange-100 mt-1">Sikat produk pilihan sebelum kehabisan!</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4">
+        <span class="text-xs bg-orange-950/40 px-3 py-2 rounded-lg font-medium">Berakhir Pukul 23:59</span>
+        <form method="POST" action="{{ route('vouchers.claim', 'flash-sale') }}">
+            @csrf
+            <button type="submit"
+                class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-3 rounded-xl whitespace-nowrap transition">
+                KLAIM VOUCHER
+            </button>
+        </form>
+        <a href="{{ route('vouchers.show', 'flash-sale') }}"
+   class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-sm px-5 py-3 rounded-xl whitespace-nowrap hover:bg-white/15 transition">
+    SYARAT & KETENTUAN
+</a>
+    </div>
+</div>
+
+<!-- Banner 5: Cashback Spesial Member -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-blue-700 via-indigo-600 to-violet-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
+    <div>
+        <span class="inline-block bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Cashback & Poin</span>
+        <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">CASHBACK HINGGA 30%</h2>
+        <p class="text-xs md:text-sm text-blue-100 mt-1">Kumpulkan poin ekstra dari setiap transaksi harianmu.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4">
+        <span class="text-xs bg-blue-950/40 px-3 py-2 rounded-lg font-medium">Khusus Member DEFAMart</span>
+        <form method="POST" action="{{ route('vouchers.claim', 'cashback-member') }}">
+            @csrf
+            <button type="submit"
+                class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-3 rounded-xl whitespace-nowrap transition">
+                KLAIM VOUCHER
+            </button>
+        </form>
+        <a href="{{ route('vouchers.show', 'cashback-member') }}"
+   class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-sm px-5 py-3 rounded-xl whitespace-nowrap hover:bg-white/15 transition">
+    SYARAT & KETENTUAN
+</a>
+    </div>
+</div>
+
+<!-- Banner 6: Kebutuhan Rumah Tangga Murah -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-pink-700 via-rose-600 to-red-700 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
+    <div>
+        <span class="inline-block bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Rumah Tangga</span>
+        <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">GROSIR SEMBAKO HEMAT</h2>
+        <p class="text-xs md:text-sm text-pink-100 mt-1">Belanja kebutuhan bulanan jadi makin hemat dan praktis.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4">
+        <span class="text-xs bg-rose-950/40 px-3 py-2 rounded-lg font-medium">Kebutuhan Sehari-hari</span>
+        <form method="POST" action="{{ route('vouchers.claim', 'rumah-tangga') }}">
+            @csrf
+            <button type="submit"
+                class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-3 rounded-xl whitespace-nowrap transition">
+                KLAIM VOUCHER
+            </button>
+        </form>
+        <a href="{{ route('vouchers.show', 'rumah-tangga') }}"
+   class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-sm px-5 py-3 rounded-xl whitespace-nowrap hover:bg-white/15 transition">
+    SYARAT & KETENTUAN
+</a>
+    </div>
+</div>
+
+<!-- Banner 7: Produk Perawatan & Kecantikan -->
+<div class="w-full md:w-[calc(50%-8px)] flex-shrink-0 relative bg-gradient-to-r from-teal-800 via-emerald-700 to-green-800 text-white rounded-2xl p-6 shadow-md overflow-hidden flex flex-col justify-between h-48 md:h-52">
+    <div>
+        <span class="inline-block bg-white/20 text-xs px-2.5 py-1 rounded-full font-semibold">Beauty & Care</span>
+        <h2 class="text-xl md:text-2xl font-extrabold mt-2 tracking-wide">GLOW UP SETIAP HARI!</h2>
+        <p class="text-xs md:text-sm text-emerald-100 mt-1">Temukan produk perawatan tubuh terbaik untukmu.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4">
+        <span class="text-xs bg-emerald-950/40 px-3 py-2 rounded-lg font-medium">Perawatan & Kecantikan</span>
+        <form method="POST" action="{{ route('vouchers.claim', 'beauty-care') }}">
+            @csrf
+            <button type="submit"
+                class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-3 rounded-xl whitespace-nowrap transition">
+                KLAIM VOUCHER
+            </button>
+        </form>
+        <a href="{{ route('vouchers.show', 'beauty-care') }}"
+   class="inline-flex items-center justify-center border-2 border-white text-white font-bold text-sm px-5 py-3 rounded-xl whitespace-nowrap hover:bg-white/15 transition">
+    SYARAT & KETENTUAN
+</a>
+    </div>
+</div>
 
                 </div>
+        <!-- PENUTUP promoSlider -->
+
+    </div>
+    <!-- PENUTUP AREA SLIDER -->  
+                
+
+
+<!-- NAVIGASI PROMO -->
+<div class="w-full mt-6 px-4">
+
+    <div class="flex flex-wrap items-center justify-between gap-4 w-full">
+
+        <!-- SEBELUMNYA -->
+        <button
+            type="button"
+            onclick="scrollSlider(-1)"
+            class="flex-shrink-0 text-sm font-semibold text-gray-500 hover:text-green-800 cursor-pointer transition"
+        >
+            &rarr; Lihat Promo Sebelumnya
+        </button>
+
+        <!-- INDIKATOR -->
+        <div class="flex items-center justify-center gap-2">
+
+            @for ($i = 0; $i < 7; $i++)
+                <span
+                    class="dot w-2.5 h-2.5 rounded-full bg-gray-300 transition-all duration-300"
+                    data-index="{{ $i }}">
+                </span>
+            @endfor
+
+        </div>
+
+        <!-- SELANJUTNYA -->
+        <button
+            type="button"
+            onclick="scrollSlider(1)"
+            class="flex-shrink-0 text-sm font-semibold text-gray-500 hover:text-green-800 cursor-pointer transition"
+        >
+            Lihat Promo Selanjutnya &rarr;
+        </button>
+
+    </div>
+
+</div>
+<!-- AKHIR NAVIGASI -->
+
+
+    </div>
+</div>
+
             </div>
 
         <!-- BAGIAN KATEGORI PILIHAN -->
@@ -497,29 +549,31 @@
         let typingTimer;
         const doneTypingInterval = 300; // Jeda 300ms agar pencarian berjalan mulus saat diketik
 
-        searchInput.addEventListener('input', function () {
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(function () {
-                searchForm.submit();
-            }, doneTypingInterval);
-        });
+        if (searchInput && searchForm) {
+            searchInput.addEventListener('input', function () {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(function () {
+                    searchForm.submit();
+                }, doneTypingInterval);
+            });
+        }
     </script>
 
     <!-- Overlay di Belakang Panel -->
-<div id="cartOverlay" class="fixed inset-0 z-40 hidden transition-opacity" onclick="toggleCart()"></div>
+<div id="cartOverlay" class="fixed inset-0 z-40 hidden bg-black/40 transition-opacity" onclick="toggleCart()"></div>
 
     <!-- Panel Samping Keranjang Belanja -->
-    <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
+    <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
         
-        <!-- Bagian Atas: Header Keranjang -->
-        <div>
-            <div class="flex items-center justify-between p-5 border-b border-gray-200">
+        <!-- Bagian Atas: Header dan Daftar Barang -->
+        <div class="flex flex-col flex-1 min-h-0">
+            <div class="flex items-center justify-between p-5 border-b border-gray-200 flex-shrink-0">
                 <h2 class="text-lg font-bold text-gray-800">Keranjang Belanja Anda</h2>
                 <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-xl font-bold px-2">&times;</button>
             </div>
 
             <!-- Daftar Item di Keranjang -->
-            <div class="p-5 overflow-y-auto max-h-[calc(100vh-220px)] space-y-4">
+            <div id="cartItemsList" class="flex-1 min-h-0 overflow-y-auto p-5 space-y-4">
                 @php
                     $userId = Auth::id() ?? 1;
                     $userCart = \App\Models\Cart::with('items.product')->where('user_id', $userId)->first();
@@ -527,8 +581,17 @@
                 @endphp
 
                 @if(!$userCart || $userCart->items->isEmpty())
-                    <div class="flex flex-col items-center justify-center py-20 text-gray-400 text-center">
-                        <p class="text-sm">Keranjang Anda masih kosong.</p>
+                    <div class="flex flex-col items-center justify-center py-8 px-4 text-center">
+                        <div class="flex items-center justify-center w-16 h-16 rounded-full bg-emerald-50 mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-emerald-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="9" cy="21" r="1"/>
+                                <circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                <path d="M9 10h10M10 13h8"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-bold text-emerald-900 mb-2">Keranjang Anda Saat Ini Masih Kosong</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed max-w-xs">Yuk belanja dan temukan produk favoritmu di DEFAMart!</p>
                     </div>
                 @else
                     @foreach($userCart->items as $item)
@@ -538,6 +601,7 @@
                         @endphp
                         <div class="flex items-center justify-between border-b pb-3">
                             <div class="flex items-center space-x-3">
+                                <input type="checkbox" class="cart-item-checkbox w-4 h-4 accent-emerald-700 cursor-pointer" data-cart-item-id="{{ $item->id }}" checked aria-label="Pilih {{ $item->product->name }}">
                                 <div class="w-14 h-14 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
                                     @if($item->product->image)
                                         <img src="{{ asset('storage/' . $item->product->image) }}" class="w-full h-full object-cover">
@@ -547,52 +611,106 @@
                                 </div>
                                 <div>
                                     <h4 class="text-sm font-semibold text-gray-800 line-clamp-1">{{ $item->product->name }}</h4>
-                                    <p class="text-xs text-gray-500">{{ $item->quantity }} x Rp {{ number_format($item->product->price, 0, ',', '.') }}</p>
+                                    
+
+<div class="flex items-center gap-2 mt-1">
+    <button
+        type="button"
+        onclick="updateCartQuantity('{{ $item->id }}', 'decrease', this)"
+        class="w-7 h-7 border rounded-md text-gray-700 hover:bg-gray-100">
+        −
+    </button>
+
+    <input
+        type="number"
+        min="1"
+        value="{{ $item->quantity }}"
+        data-cart-item-id="{{ $item->id }}"
+        class="cart-quantity w-12 h-7 border rounded-md text-center text-sm"
+        onchange="updateCartQuantity('{{ $item->id }}', 'set', this)">
+
+    <button
+        type="button"
+        onclick="updateCartQuantity('{{ $item->id }}', 'increase', this)"
+        class="w-7 h-7 border rounded-md text-gray-700 hover:bg-gray-100">
+        +
+    </button>
+
+    <span class="text-xs text-gray-500">
+        Rp {{ number_format($item->product->price, 0, ',', '.') }}/produk
+    </span>
+</div>
+
+
                                 </div>
                             </div>
-                            <p class="text-sm font-bold text-red-600">Rp {{ number_format($subtotal, 0, ',', '.') }}</p>
+                            <p
+    class="text-sm font-bold text-emerald-700 cart-subtotal"
+    data-cart-item-id="{{ $item->id }}" data-subtotal="{{ $subtotal }}">
+    Rp {{ number_format($subtotal, 0, ',', '.') }}
+</p>
                         </div>
                     @endforeach
                 @endif
             </div>
         </div>
 
+        <!-- Popup Konfirmasi Hapus Barang -->
+        <div id="removeCartModal"
+            class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/50 p-4">
+
+            <div class="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-2xl text-red-600">
+                    !
+                </div>
+
+                <h3 class="mb-2 text-lg font-bold text-gray-800">
+                    Hapus Barang?
+                </h3>
+
+                <p class="mb-6 text-sm text-gray-500">
+                    Kamu yakin ingin menghapus barang ini dari keranjang?
+                </p>
+
+                <div class="flex gap-3">
+                    <button type="button"
+                        onclick="closeRemoveCartModal()"
+                        class="flex-1 rounded-xl border border-gray-300 px-4 py-3 font-semibold text-gray-700 hover:bg-gray-100">
+                        Batal
+                    </button>
+
+                    <button type="button"
+                        onclick="confirmRemoveCartItem()"
+                        class="flex-1 rounded-xl bg-red-600 px-4 py-3 font-semibold text-white hover:bg-red-700">
+                        Ya, Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Bagian Bawah: Total Harga & Tombol Checkout -->
-        <div class="p-5 border-t border-gray-200 bg-gray-50">
+        <div class="flex-shrink-0 p-5 border-t border-gray-200 bg-gray-50">
             <div class="flex items-center justify-between mb-4">
                 <span class="text-base font-semibold text-gray-700">Total Harga:</span>
-                <span class="text-xl font-extrabold text-red-600">Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}</span>
+                <span id="cartTotal" class="text-xl font-extrabold text-emerald-700">
+    Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}
+</span>
             </div>
-            
-        php
-@if (session('success'))
-    <div style="background:#d1fae5;color:#065f46;padding:15px;margin:10px;border-radius:8px;">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if (session('error'))
-    <div style="background:#fee2e2;color:#991b1b;padding:15px;margin:10px;border-radius:8px;">
-        {{ session('error') }}
-    </div>
-@endif
-
-@if ($errors->any())
-    <div style="background:#fee2e2;color:#991b1b;padding:15px;margin:10px;border-radius:8px;">
-        @foreach ($errors->all() as $error)
-            <p>{{ $error }}</p>
-        @endforeach
-    </div>
-@endif
-
-            <form action="{{ route('order.checkout') }}" method="POST">
-    @csrf
-    <input type="hidden" name="shipping_address" value="Alamat pengiriman untuk testing">
-
-    <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-4 rounded-xl">
-        Lanjut ke Pembayaran
-    </button>
-</form>
+        <div id="cartCheckoutSection">
+            @if($userCart && $userCart->items->isNotEmpty())
+                <form action="{{ route('order.checkout') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="shipping_address" value="Alamat pengiriman untuk testing">
+                    <button type="submit" class="w-full bg-[#134e32] hover:bg-[#0f3e28] text-white font-bold py-3 rounded-xl shadow transition">
+                        Lanjut ke Pembayaran
+                    </button>
+                </form>
+            @else
+                <button type="button" disabled class="w-full bg-gray-300 text-gray-500 font-bold py-3 rounded-xl cursor-not-allowed">
+                    Keranjang Kosong
+                </button>
+            @endif
+        </div>
         </div>
 
     </div>
@@ -625,33 +743,251 @@
     </script>
 
     <script>
+    
     // Menangkap semua form tambah ke keranjang
-    document.querySelectorAll('.add-to-cart-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Mencegah halaman refresh bawaan form
+    function updateCartCheckout(items) {
+        const section = document.getElementById('cartCheckoutSection');
+        if (!section) return;
 
-            let formData = new FormData(this);
+        if (items && items.length > 0) {
+            section.innerHTML = `
+                <form action="{{ route('order.checkout') }}" method="POST">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="shipping_address" value="Alamat pengiriman untuk testing">
+                    <button type="submit" class="w-full bg-[#134e32] hover:bg-[#0f3e28] text-white font-bold py-3 rounded-xl shadow transition">
+                        Lanjut ke Pembayaran
+                    </button>
+                </form>
+            `;
+            updateSelectedCartSummary();
+        } else {
+            section.innerHTML = `
+                <button type="button" disabled class="w-full bg-gray-300 text-gray-500 font-bold py-3 rounded-xl cursor-not-allowed">
+                    Keranjang Kosong
+                </button>
+            `;
+        }
+    }
 
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    function updateSelectedCartSummary() {
+        const checkboxes = Array.from(
+            document.querySelectorAll('.cart-item-checkbox:checked')
+        );
+
+        let total = 0;
+
+        checkboxes.forEach(checkbox => {
+            const id = checkbox.dataset.cartItemId;
+            const subtotal = document.querySelector(
+                `.cart-subtotal[data-cart-item-id="${id}"]`
+            );
+
+            if (subtotal) {
+                const value = subtotal.dataset.subtotal !== undefined
+                    ? Number(subtotal.dataset.subtotal)
+                    : Number(subtotal.textContent.replace(/[^\d]/g, ''));
+
+                if (Number.isFinite(value)) {
+                    total += value;
                 }
-            })
-            .then(response => {
-                // Langsung muat ulang halaman dengan mulus setelah produk masuk database
-                location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Fallback jika terjadi kendala, lakukan submit standar
-                this.submit();
+            }
+        });
+
+        const totalElement = document.getElementById('cartTotal');
+        if (totalElement) {
+            totalElement.textContent = 'Rp ' + total.toLocaleString('id-ID');
+        }
+
+        const section = document.getElementById('cartCheckoutSection');
+        const form = section ? section.querySelector('form') : null;
+
+        if (form) {
+            form.querySelectorAll('input[name="selected_items[]"]').forEach(input => {
+                input.remove();
             });
+
+            checkboxes.forEach(checkbox => {
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'selected_items[]';
+                hidden.value = checkbox.dataset.cartItemId;
+                form.appendChild(hidden);
+            });
+
+            const button = form.querySelector('button[type="submit"]');
+            if (button) {
+                button.disabled = checkboxes.length === 0;
+                button.classList.toggle('opacity-50', checkboxes.length === 0);
+                button.classList.toggle('cursor-not-allowed', checkboxes.length === 0);
+            }
+        }
+    }
+
+    document.addEventListener('change', function (event) {
+        if (event.target.matches('.cart-item-checkbox')) {
+            updateSelectedCartSummary();
+        }
+    });
+
+    updateSelectedCartSummary();
+
+    function renderCartItems(items) {
+        const list = document.getElementById('cartItemsList');
+        if (!list) return;
+
+        list.replaceChildren();
+        updateCartCheckout(items);
+
+        if (!items || items.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'flex flex-col items-center justify-center py-8 px-4 text-center';
+            empty.innerHTML = `
+                <div class="flex items-center justify-center w-16 h-16 rounded-full bg-emerald-50 mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-emerald-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        <path d="M9 10h10M10 13h8"/>
+                    </svg>
+                </div>
+                <h3 class="text-base font-bold text-emerald-900 mb-2">Keranjang Anda Saat Ini Masih Kosong</h3>
+                <p class="text-sm text-gray-600 leading-relaxed max-w-xs">Yuk belanja dan temukan produk favoritmu di DEFAMart!</p>
+            `;
+            list.appendChild(empty);
+            updateSelectedCartSummary();
+            return;
+        }
+
+        items.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'cart-item-row flex items-center justify-between border-b pb-3';
+            row.dataset.cartItemId = item.id;
+
+            const left = document.createElement('div');
+            left.className = 'flex items-center space-x-3';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'cart-item-checkbox w-4 h-4 accent-emerald-700 cursor-pointer';
+            checkbox.dataset.cartItemId = item.id;
+            checkbox.checked = true;
+            checkbox.setAttribute('aria-label', 'Pilih ' + (item.name || 'Produk'));
+
+            checkbox.addEventListener('change', updateSelectedCartSummary);
+
+            const imageBox = document.createElement('div');
+            imageBox.className = 'w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0';
+
+            const img = document.createElement('img');
+            img.src = 'https://ui-avatars.com/api/?name='
+                + encodeURIComponent(item.name || 'Produk')
+                + '&background=random&color=fff&size=250&bold=true';
+            img.alt = item.name || 'Produk';
+            img.className = 'w-full h-full object-cover';
+            imageBox.appendChild(img);
+
+            const details = document.createElement('div');
+            const name = document.createElement('h4');
+            name.className = 'text-sm font-semibold text-gray-800 line-clamp-1';
+            name.textContent = item.name || 'Produk';
+            details.appendChild(name);
+
+            const controls = document.createElement('div');
+            controls.className = 'flex items-center gap-2 mt-1';
+
+            const decrease = document.createElement('button');
+            decrease.type = 'button';
+            decrease.className = 'w-7 h-7 border rounded-md text-sm';
+            decrease.textContent = '−';
+            decrease.addEventListener('click', function () {
+                updateCartQuantity(item.id, 'decrease', this);
+            });
+
+            const quantity = document.createElement('input');
+            quantity.type = 'number';
+            quantity.min = '1';
+            quantity.value = item.quantity;
+            quantity.dataset.cartItemId = item.id;
+            quantity.className = 'cart-quantity w-12 h-7 border rounded-md text-center text-sm';
+            quantity.addEventListener('change', function () {
+                updateCartQuantity(item.id, 'set', this);
+            });
+
+            const increase = document.createElement('button');
+            increase.type = 'button';
+            increase.className = 'w-7 h-7 border rounded-md text-sm';
+            increase.textContent = '+';
+            increase.addEventListener('click', function () {
+                updateCartQuantity(item.id, 'increase', this);
+            });
+
+            const price = document.createElement('span');
+            price.className = 'text-xs text-gray-500';
+            price.textContent = 'Rp ' + Number(item.price).toLocaleString('id-ID') + '/produk';
+
+            controls.append(decrease, quantity, increase, price);
+            details.appendChild(controls);
+            left.append(checkbox, imageBox, details);
+
+            const subtotal = document.createElement('p');
+            subtotal.className = 'text-sm font-bold text-emerald-700 cart-subtotal';
+            subtotal.dataset.cartItemId = item.id;
+            subtotal.textContent = 'Rp ' + Number(item.subtotal).toLocaleString('id-ID');
+
+            row.append(left, subtotal);
+            list.appendChild(row);
+        });
+
+        updateSelectedCartSummary();
+    }
+
+    document.querySelectorAll('.add-to-cart-form').forEach(form => {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const button = form.querySelector('button[type="submit"]');
+            const originalText = button.textContent;
+            button.disabled = true;
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Gagal menambahkan barang.');
+                }
+
+                const countElement = document.getElementById('cartCount');
+                if (countElement) {
+                    countElement.textContent = data.cart_count;
+                }
+
+                const totalElement = document.getElementById('cartTotal');
+                if (totalElement) {
+                    totalElement.textContent = 'Rp ' +
+                        Number(data.total).toLocaleString('id-ID');
+                }
+
+                renderCartItems(data.items);
+            } catch (error) {
+                alert('Gagal menambahkan barang: ' + error.message);
+                console.error(error);
+            } finally {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
         });
     });
-    </script>
+</script>
+
 
     <script>
         // Fungsi untuk membuka/menutup kotak dropdown profil
@@ -670,53 +1006,67 @@
         });
     </script>
 
-    <!-- Skrip JavaScript Pendukung Dropdown -->
     <script>
-        function toggleProfileMenu(event) {
-            event.stopPropagation();
-            const dropdown = document.getElementById('profileDropdown');
-            dropdown.classList.toggle('hidden');
-        }
+        
 
-        window.addEventListener('click', function() {
-            const dropdown = document.getElementById('profileDropdown');
-            if (dropdown && !dropdown.classList.contains('hidden')) {
-                dropdown.classList.add('hidden');
+window.scrollSlider = function(direction) {
+    const slider = document.getElementById('promoSlider');
+
+    if (!slider) {
+        alert('Slider tidak ditemukan!');
+        return;
+    }
+
+    const banner = slider.firstElementChild;
+
+    if (!banner) {
+        alert('Banner tidak ditemukan!');
+        return;
+    }
+
+    const gap = parseFloat(getComputedStyle(slider).gap) || 16;
+
+    const jarak = banner.getBoundingClientRect().width + gap;
+
+    slider.scrollBy({
+        left: direction * jarak,
+        behavior: 'smooth'
+    });
+};
+
+
+// INDIKATOR TITIK PROMO
+const promoSlider = document.getElementById('promoSlider');
+const dots = document.querySelectorAll('.dot');
+
+if (promoSlider) {
+
+    function updateDots() {
+        const banner = promoSlider.firstElementChild;
+        if (!banner) return;
+
+        const gap = parseFloat(getComputedStyle(promoSlider).gap) || 16;
+        const bannerWidth = banner.getBoundingClientRect().width + gap;
+
+        let index = Math.round(promoSlider.scrollLeft / bannerWidth);
+
+        index = Math.max(0, Math.min(index, dots.length - 1));
+
+        dots.forEach((dot, i) => {
+            if (i === index) {
+                dot.classList.remove('w-2', 'h-2', 'bg-gray-300');
+                dot.classList.add('w-3', 'h-3', 'bg-red-600');
+            } else {
+                dot.classList.remove('w-3', 'h-3', 'bg-red-600');
+                dot.classList.add('w-2', 'h-2', 'bg-gray-300');
             }
         });
-    </script>
+    }
 
-    <script>
-        function scrollSlider(direction) {
-            const slider = document.getElementById('promoSlider');
-            slider.scrollBy({ left: direction, behavior: 'smooth' });
-        }
+    promoSlider.addEventListener('scroll', updateDots);
+    updateDots();
+}
 
-        // Memantau posisi scroll untuk mengubah indikator titik secara otomatis
-        const slider = document.getElementById('promoSlider');
-        const dots = document.querySelectorAll('.dot');
-
-        if (slider) {
-            slider.addEventListener('scroll', function() {
-                // Menghitung indeks banner yang sedang aktif berdasarkan posisi scroll
-                let index = Math.round(slider.scrollLeft / (slider.offsetWidth / 2));
-                
-                // Batasi indeks agar sesuai dengan jumlah banner (0 sampai 6)
-                if (index > 6) index = 6;
-                if (index < 0) index = 0;
-
-                // Perbarui tampilan setiap titik
-                dots.forEach((dot, i) => {
-                    if (i === index) {
-                        dot.classList.remove('w-2', 'h-2', 'bg-gray-300');
-                        dot.classList.add('w-3', 'h-3', 'bg-red-600');
-                    } else {
-                        dot.classList.remove('w-3', 'h-3', 'bg-red-600');
-                        dot.classList.add('w-2', 'h-2', 'bg-gray-300');
-                    }
-                });
-            });
-        }
     </script>
 
 
@@ -727,6 +1077,11 @@ function showRemoveCartModal(itemId) {
     pendingRemoveCartItemId = itemId;
 
     const modal = document.getElementById('removeCartModal');
+
+    if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+    }
+
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 }
@@ -792,12 +1147,31 @@ async function confirmRemoveCartItem() {
             }
         }
 
-        const total = document.getElementById('cartTotal');
 
-        if (total) {
-            total.textContent = 'Rp ' +
-                Number(data.total).toLocaleString('id-ID');
+        const remainingInputs = document.querySelectorAll(
+            '.cart-quantity[data-cart-item-id]'
+        );
+
+        const cartCount = document.getElementById('cartCount');
+
+        if (cartCount) {
+            let quantityCount = 0;
+
+            remainingInputs.forEach(input => {
+                quantityCount += parseInt(input.value, 10) || 0;
+            });
+
+            cartCount.textContent = quantityCount;
         }
+
+        if (remainingInputs.length === 0) {
+            renderCartItems([]);
+            closeRemoveCartModal();
+            return;
+        }
+
+        updateCartCheckout(Array.from(remainingInputs).filter(input => parseInt(input.value, 10) > 0));
+        updateSelectedCartSummary();
 
         closeRemoveCartModal();
 
@@ -879,14 +1253,10 @@ async function updateCartQuantity(itemId, action, element) {
         if (subtotal) {
             subtotal.textContent = 'Rp ' +
                 Number(data.subtotal).toLocaleString('id-ID');
+            subtotal.dataset.subtotal = Number(data.subtotal);
         }
 
-        const total = document.getElementById('cartTotal');
-
-        if (total) {
-            total.textContent = 'Rp ' +
-                Number(data.total).toLocaleString('id-ID');
-        }
+        updateSelectedCartSummary();
 
     } catch (error) {
         input.value = oldQuantity;
@@ -898,40 +1268,6 @@ async function updateCartQuantity(itemId, action, element) {
     }
 }
 </script>
-
-
-<!-- Popup Konfirmasi Hapus Barang -->
-<div id="removeCartModal"
-    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4">
-
-    <div class="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl">
-        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-2xl text-red-600">
-            !
-        </div>
-
-        <h3 class="mb-2 text-lg font-bold text-gray-800">
-            Hapus Barang?
-        </h3>
-
-        <p class="mb-6 text-sm text-gray-500">
-            Kamu yakin ingin menghapus barang ini dari keranjang?
-        </p>
-
-        <div class="flex gap-3">
-            <button type="button"
-                onclick="closeRemoveCartModal()"
-                class="flex-1 rounded-xl border border-gray-300 px-4 py-3 font-semibold text-gray-700 hover:bg-gray-100">
-                Batal
-            </button>
-
-            <button type="button"
-                onclick="confirmRemoveCartItem()"
-                class="flex-1 rounded-xl bg-red-600 px-4 py-3 font-semibold text-white hover:bg-red-700">
-                Ya, Hapus
-            </button>
-        </div>
-    </div>
-</div>
 
 </body>
 </html>

@@ -16,37 +16,49 @@ class OrderController extends Controller
     {
         $request->validate([
             'shipping_address' => 'required|string',
+            'selected_items' => 'required|array|min:1',
+            'selected_items.*' => 'required|integer|distinct',
         ]);
 
         $userId = Auth::id() ?? 1;
 
-        $cart = Cart::with('items.product')
-            ->where('user_id', $userId)
-            ->first();
+        $cart = Cart::where('user_id', $userId)->first();
 
-        if (!$cart || $cart->items->isEmpty()) {
-    return redirect('/')
-        ->with('error', 'Keranjang kosong untuk user ID: ' . $userId);
-}
+        if (!$cart) {
+            return redirect('/')
+                ->with('error', 'Keranjang kosong.');
+        }
 
         try {
             DB::beginTransaction();
 
+            $selectedIds = $request->input('selected_items');
+
+            $selectedItems = $cart->items()
+                ->with('product')
+                ->whereIn('id', $selectedIds)
+                ->lockForUpdate()
+                ->get();
+
+            if ($selectedItems->isEmpty() ||
+                $selectedItems->count() !== count($selectedIds)) {
+                throw new \Exception('Pilihan barang tidak valid.');
+            }
+
             $totalPrice = 0;
 
-            foreach ($cart->items as $item) {
+            foreach ($selectedItems as $item) {
                 if (!$item->product) {
                     throw new \Exception('Produk tidak ditemukan.');
                 }
 
                 if ($item->quantity > $item->product->stock) {
                     throw new \Exception(
-                        'Stok produk tidak mencukupi.'
+                        'Stok produk ' . $item->product->name . ' tidak mencukupi.'
                     );
                 }
 
-                $totalPrice +=
-                    $item->product->price * $item->quantity;
+                $totalPrice += $item->product->price * $item->quantity;
             }
 
             $order = Order::create([
@@ -56,7 +68,7 @@ class OrderController extends Controller
                 'shipping_address' => $request->shipping_address,
             ]);
 
-            foreach ($cart->items as $item) {
+            foreach ($selectedItems as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item->product_id,
@@ -64,20 +76,19 @@ class OrderController extends Controller
                     'price' => $item->product->price,
                 ]);
 
-                $product = Product::findOrFail($item->product_id);
+                $product = Product::whereKey($item->product_id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
                 $product->stock -= $item->quantity;
                 $product->save();
-            }
 
-            $cart->items()->delete();
-            $cart->delete();
+                $item->delete();
+            }
 
             DB::commit();
 
-            return redirect()->route(
-                'order.payment',
-                $order->id
-            );
+            return redirect()->route('order.payment', $order->id);
 
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -86,7 +97,6 @@ class OrderController extends Controller
                 ->with('error', 'Checkout gagal: ' . $e->getMessage());
         }
     }
-
     public function payment(Order $order)
     {
         $order->load('items.product');
