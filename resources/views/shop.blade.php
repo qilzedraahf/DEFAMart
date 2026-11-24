@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEFAMart - Belanja Mudah & Cepat</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+    <html lang="id">
+        <head>
+            <meta name="csrf-token" content="{{ csrf_token() }}">
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>DEFAMart - Belanja Mudah & Cepat</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+        </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col justify-between">
 
@@ -121,13 +121,13 @@
 
             </div>
 
-            <!-- Panel Samping Keranjang Belanja (Nuansa Hijau) -->
+            <!-- Panel Samping Keranjang Belanja (Tampilan Saja) -->
             <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
                 
                 <div>
                     <div class="flex items-center justify-between p-5 border-b border-gray-200">
                         <h2 class="text-lg font-bold text-gray-800">Keranjang Belanja Anda</h2>
-                        <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-xl font-bold px-2">&times;</button>
+                        <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-xl font-bold px-2 cursor-pointer">&times;</button>
                     </div>
 
                     <div class="p-5 overflow-y-auto max-h-[calc(100vh-220px)] space-y-4">
@@ -150,70 +150,35 @@
                                 <div class="flex items-center justify-between border-b pb-3">
                                     <div class="flex items-center space-x-3">
                                         <div class="w-14 h-14 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
-                                            @if($item->product->image)
-                                                <img src="{{ asset('storage/' . $item->product->image) }}" class="w-full h-full object-cover">
-                                            @else
-                                                <span class="text-[10px] text-gray-400">No Image</span>
-                                            @endif
+                                            <img src="{{ asset('images/default.jpg') }}" alt="Default Produk" class="w-full h-full object-cover">
                                         </div>
                                         <div>
                                             <h4 class="text-sm font-semibold text-gray-800 line-clamp-1">{{ $item->product->name }}</h4>
-                                           
-
-                                            <p class="text-xs text-gray-500 mb-2">
-                                                Rp {{ number_format($item->product->price, 0, ',', '.') }} / item
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                {{ $item->quantity }} x Rp {{ number_format($item->product->price, 0, ',', '.') }}
                                             </p>
-
-                                            <div class="flex items-center gap-2">
-                                                <button type="button"
-                                                    onclick="updateCartQuantity({{ $item->id }}, 'decrease', this)"
-                                                    class="w-8 h-8 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
-                                                    −
-                                                </button>
-
-                                                <input type="number"
-                                                    min="1"
-                                                    value="{{ $item->quantity }}"
-                                                    data-cart-item-id="{{ $item->id }}"
-                                                    data-price="{{ $item->product->price }}"
-                                                    onchange="updateCartQuantity({{ $item->id }}, 'set', this)"
-                                                    class="cart-quantity w-14 h-8 text-center text-base font-bold text-gray-800 bg-white border border-gray-300 rounded-lg">
-
-                                                <button type="button"
-                                                    onclick="updateCartQuantity({{ $item->id }}, 'increase', this)"
-                                                    class="w-8 h-8 rounded-lg bg-[#134e32] text-white hover:bg-[#0f3e28]">
-                                                    +
-                                                </button>
-                                            </div>
-
-                                            <p class="cart-subtotal text-sm font-bold text-[#134e32] mt-2"
-                                            data-cart-item-id="{{ $item->id }}">
-                                                Rp {{ number_format($subtotal, 0, ',', '.') }}
-                                            </p>
-
                                         </div>
                                     </div>
-                                  
+                                    <p class="text-sm font-bold text-[#134e32]">
+                                        Rp {{ number_format($subtotal, 0, ',', '.') }}
+                                    </p>
                                 </div>
                             @endforeach
                         @endif
                     </div>
                 </div>
 
-                <!-- Bagian Bawah: Total Harga & Tombol Checkout Nuansa Hijau -->
+                <!-- Bagian Bawah: Total Harga & Tombol Checkout -->
                 <div class="p-5 border-t border-gray-200 bg-gray-50">
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-base font-semibold text-gray-700">Total Harga:</span>
-                       
-                        <span id="cartTotal" class="text-xl font-extrabold text-[#134e32]">Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}</span>
-
+                        <span class="text-xl font-extrabold text-[#134e32]">Rp {{ number_format(isset($totalPrice) ? $totalPrice : 0, 0, ',', '.') }}</span>
                     </div>
                     
                     <form action="{{ route('order.checkout') }}" method="POST">
                         @csrf
                         <input type="hidden" name="shipping_address" value="Alamat Default Uji Coba">
-                        <!-- Tombol Pembayaran dengan Warna Hijau Utama DEFAMart -->
-                        <button type="submit" class="w-full bg-[#134e32] hover:bg-[#0f3e28] text-white font-bold py-3 rounded-xl shadow transition text-center">
+                        <button type="submit" class="w-full bg-[#134e32] hover:bg-[#0f3e28] text-white font-bold py-3 rounded-xl shadow transition text-center cursor-pointer">
                             Lanjut ke Pembayaran
                         </button>
                     </form>
@@ -492,17 +457,12 @@
                         @foreach($products as $product)
                             <div class="border border-gray-200 rounded-xl p-4 flex flex-col justify-between hover:shadow-md transition">
                                 <div>
-                                    <!-- Kotak Gambar Produk Disesuaikan ke Rasio 4:3 (800x600 px) -->
                                     <div class="w-full aspect-[4/3] bg-gray-100 rounded-lg mb-3 overflow-hidden flex items-center justify-center">
-                                        @if($product->image)
-                                            <!-- Jika produk punya gambar di database -->
-                                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
-                                        @else
-                                            <!-- Jika produk kosong/tidak ada gambar -->
-                                            <span class="text-xs text-gray-400">Tidak ada gambar</span>
-                                        @endif
+                                        <!-- Otomatis membuat gambar berlatar warna dengan inisial nama produk -->
+                                        <img src="https://ui-avatars.com/api/?name={{ urlencode($product->name) }}&background=random&color=fff&size=250&bold=true" 
+                                            alt="{{ $product->name }}" 
+                                            class="w-full h-full object-cover">
                                     </div>
-
                                     <span class="text-xs text-emerald-600 font-semibold">{{ $product->category->name ?? 'Kategori' }}</span>
                                     <h3 class="font-bold text-gray-800 text-sm mb-1 line-clamp-2">{{ $product->name }}</h3>
                                     <p class="text-emerald-700 font-extrabold text-base mb-2">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
@@ -640,17 +600,26 @@
     <!-- Skrip JavaScript untuk Buka/Tutup Panel Samping -->
     <script>
     function toggleCart(event) {
-    if (event) event.preventDefault();
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
 
     const drawer = document.getElementById('cartDrawer');
     const overlay = document.getElementById('cartOverlay');
 
     if (!drawer || !overlay) return;
 
-    const tertutup = drawer.classList.contains('translate-x-full');
+    // Cek status apakah drawer sedang tertutup (memiliki kelas translate-x-full)
+    const isClosed = drawer.classList.contains('translate-x-full');
 
-    drawer.classList.toggle('translate-x-full', !tertutup);
-    overlay.classList.toggle('hidden', tertutup);
+    if (isClosed) {
+        drawer.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+    } else {
+        drawer.classList.add('translate-x-full');
+        overlay.classList.add('hidden');
+    }
 }
 
     </script>
