@@ -125,6 +125,7 @@
     <a href="{{ route('shop.index') }}" class="btn">
         Kembali ke Beranda
     </a>
+    </div>
 </div>
 
 </body>
