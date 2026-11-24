@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
     <html lang="id">
         <head>
             <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -565,12 +565,7 @@
     <!-- Panel Samping Keranjang Belanja -->
     <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
         
-        <!-- Bagian Atas: Header dan Daftar Barang -->
-        <div class="flex flex-col flex-1 min-h-0">
-            <div class="flex items-center justify-between p-5 border-b border-gray-200 flex-shrink-0">
-                <h2 class="text-lg font-bold text-gray-800">Keranjang Belanja Anda</h2>
-                <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-xl font-bold px-2">&times;</button>
-            </div>
+       
 
             <!-- Daftar Item di Keranjang -->
             <div id="cartItemsList" class="flex-1 min-h-0 overflow-y-auto p-5 space-y-4">
